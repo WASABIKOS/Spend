@@ -6,6 +6,9 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>Spent — Personal Finance</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -610,21 +613,23 @@ function exportExcel() {
     ])
   ];
   const ws = XLSX.utils.aoa_to_sheet(rows);
-
-  // Column widths
   ws['!cols'] = [{wch:14},{wch:12},{wch:10},{wch:14},{wch:14}];
-
-  // Style header row (bold)
-  const range = XLSX.utils.decode_range(ws['!ref']);
-  for (let C=range.s.c; C<=range.e.c; C++) {
-    const cell = ws[XLSX.utils.encode_cell({r:0,c:C})];
-    if (cell) cell.s = { font:{bold:true} };
-  }
-
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, 'Registros');
+
   const fecha = new Date().toISOString().split('T')[0];
-  XLSX.writeFile(wb, `spent_registros_${fecha}.xlsx`);
+  const filename = `spent_${fecha}.xlsx`;
+
+  // Blob download — compatible con WebView Android sin prompt
+  const wbout = XLSX.write(wb, { bookType:'xlsx', type:'array' });
+  const blob = new Blob([wbout], { type:'application/octet-stream' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => { URL.revokeObjectURL(url); document.body.removeChild(a); }, 300);
   toast('Excel descargado ✓');
 }
 
