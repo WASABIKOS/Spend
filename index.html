@@ -27,7 +27,6 @@
     --white: #f5f5f5;
     --danger: #c0392b;
     --success: #27ae60;
-    /* Neon green palette for new charts */
     --neon: #39ff6a;
     --neon-dim: rgba(57,255,106,0.18);
     --neon-mid: rgba(57,255,106,0.45);
@@ -124,7 +123,8 @@
   /* CHARTS */
   .month-selector { display:flex; align-items:center; justify-content:space-between; padding:16px 24px; border-bottom:1px solid var(--gray-800); }
   .month-nav { background:none; border:none; color:var(--gray-400); font-size:24px; cursor:pointer; padding:4px 8px; }
-  .month-label { font-family:'Syne',sans-serif; font-size:19px; font-weight:600; }
+  /* Month label — Arial */
+  .month-label { font-family:'Arial',sans-serif; font-size:19px; font-weight:700; }
   .charts-sec { padding:24px; }
   .sec-title { font-size:13px; letter-spacing:0.25em; color:var(--gray-500); text-transform:uppercase; margin-bottom:16px; }
   .chart-card { background:var(--gray-900); border:1px solid var(--gray-800); border-radius:16px; padding:20px; margin-bottom:16px; }
@@ -150,6 +150,7 @@
   /* TOAST */
   .toast { position:fixed; bottom:110px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--gray-700); color:var(--white); padding:10px 20px; border-radius:20px; font-size:16px; opacity:0; transition:all 0.3s; z-index:500; pointer-events:none; white-space:nowrap; }
   .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
   /* EXPORT */
   .btn-export { width:100%; background:var(--gray-800); color:var(--white); border:1px solid var(--gray-600); border-radius:12px; padding:16px; font-family:'Arial',sans-serif; font-size:17px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; transition:background 0.15s, transform 0.1s; display:flex; align-items:center; justify-content:center; }
   .btn-export:active { transform:scale(0.98); background:var(--gray-700); }
@@ -161,10 +162,6 @@
   .export-empty { font-size:16px; color:var(--gray-600); text-align:center; padding:24px 0; }
 
   ::-webkit-scrollbar { width:0; }
-
-  /* ============================================
-     NEW CHART ADDITIONS — CSS (neon green, DM Mono)
-     ============================================ */
 
   /* KPI Sparkline Cards Row */
   .kpi-row {
@@ -270,64 +267,6 @@
     flex-shrink: 0;
   }
 
-  /* Gauge */
-  .gauge-wrap {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  .gauge-canvas-wrap {
-    position: relative;
-    width: 180px;
-    height: 100px;
-    margin: 0 auto 6px;
-    overflow: hidden;
-  }
-  .gauge-center {
-    position: absolute;
-    bottom: 0;
-    left: 0; right: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-bottom: 2px;
-  }
-  .gauge-pct {
-    font-family: 'DM Mono', monospace;
-    font-size: 22px;
-    font-weight: 500;
-    color: var(--white);
-    line-height: 1;
-  }
-  .gauge-sub {
-    font-family: 'DM Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 0.15em;
-    color: var(--gray-500);
-    text-transform: uppercase;
-    margin-top: 2px;
-  }
-  .gauge-labels {
-    display: flex;
-    justify-content: space-between;
-    width: 180px;
-    font-family: 'DM Mono', monospace;
-    font-size: 9px;
-    color: var(--gray-600);
-    letter-spacing: 0.08em;
-    margin-top: 4px;
-  }
-  .gauge-footer {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    color: var(--gray-500);
-    margin-top: 10px;
-    text-align: center;
-    letter-spacing: 0.08em;
-  }
-  .gauge-footer span { color: var(--white); }
-  .gauge-footer .muted { color: var(--gray-400); }
-
   /* Section dividers */
   .new-sec-divider {
     font-family: 'DM Mono', monospace;
@@ -382,25 +321,21 @@
   </div>
   <div class="charts-sec">
 
-    <!-- EXISTING: Daily spending bar chart -->
+    <!-- Gasto diario -->
     <div class="chart-card">
       <div class="chart-title">Gasto diario</div>
       <div class="chart-sub">Gastos por día este mes</div>
       <canvas id="daily-chart" height="140"></canvas>
     </div>
 
-    <!-- EXISTING: Monthly trend line chart -->
+    <!-- Tendencia mensual -->
     <div class="chart-card">
       <div class="chart-title">Tendencia mensual</div>
       <div class="chart-sub">Últimos 6 meses</div>
       <canvas id="monthly-chart" height="140"></canvas>
     </div>
 
-    <!-- ============================================
-         NEW ADDITIONS START HERE
-         ============================================ -->
-
-    <!-- NEW 4: KPI Sparkline Cards (2-column grid) -->
+    <!-- KPI Sparkline Cards -->
     <div class="new-sec-divider">Indicadores clave</div>
     <div class="kpi-row">
       <div class="kpi-card">
@@ -421,7 +356,7 @@
       </div>
     </div>
 
-    <!-- NEW 1: Donut Chart — Category Distribution -->
+    <!-- Donut Chart -->
     <div class="new-sec-divider">Distribución</div>
     <div class="chart-card">
       <div class="chart-title">Por categoría</div>
@@ -438,14 +373,14 @@
       </div>
     </div>
 
-    <!-- NEW 3: Comparative Bars — Top categories -->
+    <!-- Comparativa -->
     <div class="chart-card">
       <div class="chart-title">Comparativa</div>
       <div class="chart-sub">Top categorías este mes</div>
       <canvas id="compare-chart" height="160"></canvas>
     </div>
 
-    <!-- NEW 2: Line chart — Weekly trend (last 8 weeks) -->
+    <!-- Tendencia semanal -->
     <div class="new-sec-divider">Evolución</div>
     <div class="chart-card">
       <div class="chart-title">Tendencia semanal</div>
@@ -453,32 +388,6 @@
       <canvas id="weekly-chart" height="140"></canvas>
     </div>
 
-    <!-- NEW 5: Gauge — Budget progress -->
-    <div class="new-sec-divider">Meta mensual</div>
-    <div class="chart-card">
-      <div class="chart-title">Progreso vs meta</div>
-      <div class="chart-sub">Presupuesto mensual estimado</div>
-      <div class="gauge-wrap">
-        <div class="gauge-canvas-wrap">
-          <canvas id="gauge-chart"></canvas>
-          <div class="gauge-center">
-            <div class="gauge-pct" id="gauge-pct">0%</div>
-            <div class="gauge-sub">del presupuesto</div>
-          </div>
-        </div>
-        <div class="gauge-labels">
-          <span>$0</span>
-          <span id="gauge-budget-label">Meta</span>
-        </div>
-        <div class="gauge-footer">
-          Gastado: <span id="gauge-spent-label">$0</span>
-          &nbsp;/&nbsp;
-          Meta: <span class="muted" id="gauge-goal-label">$0</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- END NEW ADDITIONS -->
   </div>
 </div>
 
@@ -556,7 +465,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
-// ---- SVG ICONS (pure monochrome, stroke-based) ----
 const IC = {
   food:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>`,
   transport:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="11" rx="2"/><path d="M16 18v2M8 18v2M2 13h20"/><circle cx="7" cy="16" r="1" fill="currentColor" stroke="none"/><circle cx="17" cy="16" r="1" fill="currentColor" stroke="none"/><path d="M6 7V5a2 2 0 012-2h8a2 2 0 012 2v2"/></svg>`,
@@ -588,7 +496,6 @@ const CATS = [
   {id:'other',    name:'Otro'},
 ];
 
-// ---- STATE ----
 if (!localStorage.getItem('spent_initialized')) {
   localStorage.removeItem('spent_v2');
   localStorage.removeItem('spent_v3');
@@ -602,14 +509,11 @@ let catPeriod    = 'month';
 let chartMonth   = new Date();
 let dailyChart   = null;
 let monthlyChart = null;
-
-// NEW chart instances
 let donutChart   = null;
 let compareChart = null;
 let weeklyChart  = null;
 let sparkDaily   = null;
 let sparkTop     = null;
-let gaugeChart   = null;
 
 function save() { localStorage.setItem('spent_v3', JSON.stringify(DATA)); }
 function fmt(n) { return Number(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); }
@@ -621,7 +525,6 @@ function uid() { return Date.now().toString(36)+Math.random().toString(36).slice
 function icon(id) { return IC[id] || IC.other; }
 function catName(id) { return (CATS.find(c=>c.id===id)||{name:id}).name; }
 
-// ---- INIT ----
 window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('today-date').textContent =
     new Date().toLocaleDateString('es',{weekday:'long',day:'numeric',month:'long'});
@@ -631,7 +534,6 @@ window.addEventListener('DOMContentLoaded', () => {
   updateChartMonthLabel();
 });
 
-// ---- RENDER ALL ----
 function renderAll() { updateHeader(); renderLog(); renderCats(); renderCharts(); }
 
 function updateHeader() {
@@ -646,7 +548,6 @@ function updateHeader() {
   document.getElementById('month-income').textContent = '$'+fmt(income);
 }
 
-// ---- LOG ----
 function filterData() {
   const now = new Date();
   return DATA.filter(e => {
@@ -702,7 +603,6 @@ function deleteEntry(btn, id) {
   }, 120);
 }
 
-// ---- CATS ----
 function renderCats() {
   const now = new Date();
   let entries = DATA.filter(e=>e.type==='expense');
@@ -728,7 +628,6 @@ function renderCats() {
     </div>`).join('');
 }
 
-// ---- CHARTS ----
 const CHART_OPTS = {
   plugins:{ legend:{display:false}, tooltip:{
     backgroundColor:'#111111', titleColor:'#5a5a5a', bodyColor:'#f5f5f5',
@@ -782,15 +681,9 @@ function renderCharts() {
     }
   });
 
-  // ---- NEW CHARTS ----
   renderNewCharts();
 }
 
-// ============================================
-// NEW CHART RENDERING FUNCTIONS
-// ============================================
-
-// Neon green palette — shades for multiple categories
 const CAT_COLORS = [
   'rgba(57,255,106,0.85)',
   'rgba(57,255,106,0.55)',
@@ -839,10 +732,8 @@ function renderNewCharts() {
   renderCompareChart(expenses);
   renderWeeklyChart();
   renderKPICards(expenses, yr, mo);
-  renderGauge(expenses);
 }
 
-// ---- 1. DONUT CHART ----
 function renderDonutChart(expenses) {
   const totals = {};
   CATS.forEach(c => totals[c.id] = 0);
@@ -897,7 +788,6 @@ function renderDonutChart(expenses) {
   });
 }
 
-// ---- 3. COMPARATIVE BARS ----
 function renderCompareChart(expenses) {
   const totals = {};
   CATS.forEach(c => totals[c.id] = 0);
@@ -958,7 +848,6 @@ function renderCompareChart(expenses) {
   });
 }
 
-// ---- 2. WEEKLY LINE CHART ----
 function renderWeeklyChart() {
   const now = new Date();
   const weeks = [];
@@ -1029,7 +918,6 @@ function renderWeeklyChart() {
   });
 }
 
-// ---- 4. KPI SPARKLINE CARDS ----
 function renderKPICards(expenses, yr, mo) {
   const daysElapsed = Math.max(new Date().getDate(), 1);
   const totalSpent  = expenses.reduce((s,e) => s+e.amount, 0);
@@ -1047,7 +935,6 @@ function renderKPICards(expenses, yr, mo) {
   deltaEl.textContent = (delta >= 0 ? '+' : '') + delta.toFixed(1) + '% vs ant.';
   deltaEl.className = 'kpi-delta ' + (delta > 5 ? 'neg' : delta < -5 ? 'pos' : 'neutral');
 
-  // Sparkline: last 7 days spending
   const sparkData = Array.from({length:7},(_,i) => {
     const d = new Date(); d.setDate(d.getDate()-6+i);
     const ds = d.toISOString().split('T')[0];
@@ -1078,7 +965,6 @@ function renderKPICards(expenses, yr, mo) {
     }
   });
 
-  // Top category
   const totals = {};
   expenses.forEach(e => totals[e.category]=(totals[e.category]||0)+e.amount);
   const topCat = Object.entries(totals).sort((a,b)=>b[1]-a[1])[0];
@@ -1086,7 +972,6 @@ function renderKPICards(expenses, yr, mo) {
   document.getElementById('kpi-top-delta').textContent = topCat ? catName(topCat[0]) : '—';
   document.getElementById('kpi-top-delta').className = 'kpi-delta neutral';
 
-  // Sparkline: top category last 6 months
   const topMonths = Array.from({length:6},(_,i) => {
     const d = new Date(yr, mo-5+i, 1);
     return getMonthExpenses(d.getFullYear(), d.getMonth())
@@ -1117,56 +1002,6 @@ function renderKPICards(expenses, yr, mo) {
   });
 }
 
-// ---- 5. GAUGE CHART ----
-function renderGauge(expenses) {
-  const spent = expenses.reduce((s,e) => s+e.amount, 0);
-
-  const now = new Date();
-  let budget = 0;
-  for (let i=1; i<=3; i++) {
-    const d = new Date(now.getFullYear(), now.getMonth()-i, 1);
-    budget += getMonthExpenses(d.getFullYear(), d.getMonth()).reduce((s,e)=>s+e.amount,0);
-  }
-  budget = Math.max((budget/3)*1.1, spent*1.2, 100);
-  const pct = Math.min(spent/budget, 1);
-
-  document.getElementById('gauge-pct').textContent = Math.round(pct*100) + '%';
-  document.getElementById('gauge-budget-label').textContent = fmtShort(budget);
-  document.getElementById('gauge-spent-label').textContent  = '$' + fmt(spent);
-  document.getElementById('gauge-goal-label').textContent   = '$' + fmt(budget);
-
-  // Color: neon green → yellow → red
-  const gaugeColor = pct < 0.6
-    ? NEON
-    : pct < 0.85
-    ? 'rgba(255,210,60,0.9)'
-    : 'rgba(192,57,43,0.9)';
-
-  const ctx = document.getElementById('gauge-chart').getContext('2d');
-  if (gaugeChart) gaugeChart.destroy();
-
-  gaugeChart = new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      datasets: [{
-        data: [pct, 1-pct],
-        backgroundColor: [gaugeColor, 'rgba(255,255,255,0.05)'],
-        borderColor: 'transparent',
-        borderWidth: 0,
-        circumference: 180,
-        rotation: -90,
-        borderRadius: [4, 0],
-      }]
-    },
-    options: {
-      responsive: true,
-      cutout: '72%',
-      animation: { duration: 900, easing: 'easeOutQuart' },
-      plugins: { legend:{display:false}, tooltip:{enabled:false} }
-    }
-  });
-}
-
 function changeChartMonth(d) {
   chartMonth = new Date(chartMonth.getFullYear(), chartMonth.getMonth()+d, 1);
   updateChartMonthLabel();
@@ -1176,7 +1011,6 @@ function updateChartMonthLabel() {
   document.getElementById('chart-month-label').textContent = chartMonth.toLocaleDateString('es',{month:'long',year:'numeric'});
 }
 
-// ---- MODAL ----
 function openModal() {
   document.getElementById('inp-amount').value='';
   document.getElementById('inp-desc').value='';
@@ -1222,7 +1056,6 @@ function addEntry() {
   toast(currentType==='expense'?'Gasto guardado ✓':'Ingreso guardado ✓');
 }
 
-// ---- FILTERS ----
 function setFilter(el,f) {
   logFilter=f;
   document.querySelectorAll('#view-log .filter-chip').forEach(c=>c.classList.remove('active'));
@@ -1234,7 +1067,6 @@ function setCatPeriod(el,p) {
   el.classList.add('active'); renderCats();
 }
 
-// ---- TABS ----
 function switchTab(tab,btn) {
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
@@ -1245,7 +1077,6 @@ function switchTab(tab,btn) {
   if(tab==='export') renderExport();
 }
 
-// ---- EXPORT ----
 function renderExport() {
   const el = document.getElementById('export-preview');
   if (!DATA.length) {
@@ -1304,7 +1135,6 @@ function exportExcel() {
   toast('Excel descargado ✓');
 }
 
-// ---- SHARE ----
 function buildCSVText() {
   const sorted = DATA.slice().sort((a,b)=>new Date(b.date)-new Date(a.date));
   const lines = ['ID | Fecha | Tipo | Categoría | Monto'];
