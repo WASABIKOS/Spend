@@ -496,11 +496,13 @@ const CATS = [
   {id:'other',    name:'Otro'},
 ];
 
-if (!localStorage.getItem('spent_initialized')) {
-  localStorage.removeItem('spent_v2');
-  localStorage.removeItem('spent_v3');
-  localStorage.setItem('spent_initialized', '1');
-}
+// Force clear any previously seeded sample data
+localStorage.removeItem('spent_v3');
+localStorage.removeItem('spent_v2');
+localStorage.removeItem('spent_sample_seeded');
+localStorage.removeItem('spent_initialized');
+
+
 let DATA = JSON.parse(localStorage.getItem('spent_v3') || '[]');
 let currentType = 'expense';
 let selectedCat  = 'food';
@@ -524,6 +526,7 @@ function fmtShort(n) {
 function uid() { return Date.now().toString(36)+Math.random().toString(36).slice(2); }
 function icon(id) { return IC[id] || IC.other; }
 function catName(id) { return (CATS.find(c=>c.id===id)||{name:id}).name; }
+
 
 window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('today-date').textContent =
@@ -632,11 +635,11 @@ const CHART_OPTS = {
   plugins:{ legend:{display:false}, tooltip:{
     backgroundColor:'#111111', titleColor:'#5a5a5a', bodyColor:'#f5f5f5',
     borderColor:'#1c1c1c', borderWidth:1, padding:8,
-    titleFont:{family:'DM Mono',size:9}, bodyFont:{family:'DM Mono',size:11,weight:'500'}
+    titleFont:{family:'DM Mono',size:13}, bodyFont:{family:'DM Mono',size:11,weight:'500'}
   }},
   scales:{
-    x:{ grid:{color:'rgba(255,255,255,0.04)'}, ticks:{color:'#5a5a5a',font:{family:'DM Mono',size:9}}, border:{color:'rgba(255,255,255,0.05)'} },
-    y:{ grid:{color:'rgba(255,255,255,0.04)'}, ticks:{color:'#5a5a5a',font:{family:'DM Mono',size:9},callback:v=>'$'+v}, border:{color:'rgba(255,255,255,0.05)'} }
+    x:{ grid:{color:'rgba(255,255,255,0.04)'}, ticks:{color:'#e8e8e8',font:{family:'DM Mono',size:13}}, border:{color:'rgba(255,255,255,0.05)'} },
+    y:{ grid:{color:'rgba(255,255,255,0.04)'}, ticks:{color:'#e8e8e8',font:{family:'DM Mono',size:13},callback:v=>'$'+v}, border:{color:'rgba(255,255,255,0.05)'} }
   }
 };
 
@@ -676,7 +679,7 @@ function renderCharts() {
       { label:'Ingresos', data:mIncome, borderColor:'rgba(120,180,130,0.6)', backgroundColor:'rgba(120,180,130,0.05)', borderWidth:1.5, pointBackgroundColor:'rgba(120,180,130,0.8)', pointRadius:3, tension:0.4, fill:true }
     ]},
     options:{ responsive:true, ...CHART_OPTS,
-      plugins:{ legend:{ labels:{color:'#5a5a5a',font:{family:'DM Mono',size:9},boxWidth:8} },
+      plugins:{ legend:{ labels:{color:'#e8e8e8',font:{family:'DM Mono',size:13},boxWidth:8} },
         tooltip:{ ...CHART_OPTS.plugins.tooltip, callbacks:{ label:i=>`${i.dataset.label}: $${fmt(i.raw)}` } } }
     }
   });
@@ -710,7 +713,7 @@ const TOOLTIP_DEFAULTS = {
   bodyColor: '#f5f5f5',
   borderColor: '#2a2a2a',
   borderWidth: 1,
-  titleFont: { family: FONT_MONO, size: 9 },
+  titleFont: { family: FONT_MONO, size: 13 },
   bodyFont:  { family: FONT_MONO, size: 11, weight: '500' },
   padding: 8,
 };
@@ -835,12 +838,12 @@ function renderCompareChart(expenses) {
       scales: {
         x: {
           grid: { display: false },
-          ticks: { color:'#5a5a5a', font:{ family: FONT_MONO, size: 9 } },
+          ticks: { color:'#e8e8e8', font:{ family: FONT_MONO, size: 13 } },
           border: { color:'rgba(255,255,255,0.05)' }
         },
         y: {
           grid: { color:'rgba(255,255,255,0.04)' },
-          ticks: { color:'#5a5a5a', font:{ family: FONT_MONO, size: 9 }, callback: v => fmtShort(v) },
+          ticks: { color:'#e8e8e8', font:{ family: FONT_MONO, size: 13 }, callback: v => fmtShort(v) },
           border: { color:'rgba(255,255,255,0.05)' }
         }
       }
@@ -905,12 +908,12 @@ function renderWeeklyChart() {
       scales: {
         x: {
           grid: { display: false },
-          ticks: { color:'#5a5a5a', font:{ family: FONT_MONO, size: 8 }, maxRotation: 30 },
+          ticks: { color:'#e8e8e8', font:{ family: FONT_MONO, size: 13 }, maxRotation: 30 },
           border: { color:'rgba(255,255,255,0.05)' }
         },
         y: {
           grid: { color:'rgba(255,255,255,0.04)' },
-          ticks: { color:'#5a5a5a', font:{ family: FONT_MONO, size: 9 }, callback: v => fmtShort(v) },
+          ticks: { color:'#e8e8e8', font:{ family: FONT_MONO, size: 13 }, callback: v => fmtShort(v) },
           border: { color:'rgba(255,255,255,0.05)' }
         }
       }
