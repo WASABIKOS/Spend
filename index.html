@@ -27,9 +27,14 @@
     --white: #f5f5f5;
     --danger: #c0392b;
     --success: #27ae60;
+    /* Neon green palette for new charts */
+    --neon: #39ff6a;
+    --neon-dim: rgba(57,255,106,0.18);
+    --neon-mid: rgba(57,255,106,0.45);
+    --neon-line: rgba(57,255,106,0.7);
   }
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-  body { font-family:'DM Mono',monospace; background:var(--black); color:var(--white); min-height:100vh; max-width:430px; margin:0 auto; overflow-x:hidden; font-size:24px; }
+  body { font-family:'DM Mono',monospace; background:var(--black); color:var(--white); min-height:100vh; max-width:430px; margin:0 auto; overflow-x:hidden; font-size:12px; }
 
   /* HEADER */
   .header { padding:52px 24px 24px; border-bottom:1px solid var(--gray-800); position:sticky; top:0; background:var(--black); z-index:100; }
@@ -156,6 +161,182 @@
   .export-empty { font-size:16px; color:var(--gray-600); text-align:center; padding:24px 0; }
 
   ::-webkit-scrollbar { width:0; }
+
+  /* ============================================
+     NEW CHART ADDITIONS — CSS (neon green, DM Mono)
+     ============================================ */
+
+  /* KPI Sparkline Cards Row */
+  .kpi-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .kpi-card {
+    background: var(--gray-900);
+    border: 1px solid var(--gray-800);
+    border-radius: 16px;
+    padding: 14px;
+    overflow: hidden;
+  }
+  .kpi-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    color: var(--gray-500);
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+  .kpi-value {
+    font-family: 'DM Mono', monospace;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--white);
+    margin-bottom: 3px;
+    line-height: 1.1;
+  }
+  .kpi-delta {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    margin-bottom: 10px;
+  }
+  .kpi-delta.pos { color: var(--neon); }
+  .kpi-delta.neg { color: var(--danger); }
+  .kpi-delta.neutral { color: var(--gray-500); }
+  .kpi-spark-wrap {
+    height: 36px;
+  }
+  .kpi-spark-wrap canvas {
+    height: 36px !important;
+  }
+
+  /* Donut Chart */
+  .donut-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .donut-canvas-wrap {
+    position: relative;
+    width: 160px;
+    height: 160px;
+    margin: 0 auto 14px;
+  }
+  .donut-center {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+  .donut-center-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: var(--gray-500);
+    text-transform: uppercase;
+    margin-bottom: 3px;
+  }
+  .donut-center-value {
+    font-family: 'DM Mono', monospace;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--white);
+  }
+  .donut-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 12px;
+    justify-content: center;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--gray-400);
+    text-transform: uppercase;
+  }
+  .legend-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* Gauge */
+  .gauge-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .gauge-canvas-wrap {
+    position: relative;
+    width: 180px;
+    height: 100px;
+    margin: 0 auto 6px;
+    overflow: hidden;
+  }
+  .gauge-center {
+    position: absolute;
+    bottom: 0;
+    left: 0; right: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 2px;
+  }
+  .gauge-pct {
+    font-family: 'DM Mono', monospace;
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--white);
+    line-height: 1;
+  }
+  .gauge-sub {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    color: var(--gray-500);
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+  .gauge-labels {
+    display: flex;
+    justify-content: space-between;
+    width: 180px;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    color: var(--gray-600);
+    letter-spacing: 0.08em;
+    margin-top: 4px;
+  }
+  .gauge-footer {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--gray-500);
+    margin-top: 10px;
+    text-align: center;
+    letter-spacing: 0.08em;
+  }
+  .gauge-footer span { color: var(--white); }
+  .gauge-footer .muted { color: var(--gray-400); }
+
+  /* Section dividers */
+  .new-sec-divider {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    color: var(--gray-500);
+    text-transform: uppercase;
+    margin: 24px 0 14px;
+  }
 </style>
 </head>
 <body>
@@ -200,16 +381,104 @@
     <button class="month-nav" onclick="changeChartMonth(1)">&#8250;</button>
   </div>
   <div class="charts-sec">
+
+    <!-- EXISTING: Daily spending bar chart -->
     <div class="chart-card">
       <div class="chart-title">Gasto diario</div>
       <div class="chart-sub">Gastos por día este mes</div>
       <canvas id="daily-chart" height="140"></canvas>
     </div>
+
+    <!-- EXISTING: Monthly trend line chart -->
     <div class="chart-card">
       <div class="chart-title">Tendencia mensual</div>
       <div class="chart-sub">Últimos 6 meses</div>
       <canvas id="monthly-chart" height="140"></canvas>
     </div>
+
+    <!-- ============================================
+         NEW ADDITIONS START HERE
+         ============================================ -->
+
+    <!-- NEW 4: KPI Sparkline Cards (2-column grid) -->
+    <div class="new-sec-divider">Indicadores clave</div>
+    <div class="kpi-row">
+      <div class="kpi-card">
+        <div class="kpi-label">Promedio diario</div>
+        <div class="kpi-value" id="kpi-daily-avg">$0</div>
+        <div class="kpi-delta pos" id="kpi-daily-delta">— vs anterior</div>
+        <div class="kpi-spark-wrap">
+          <canvas id="spark-daily"></canvas>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Mayor gasto</div>
+        <div class="kpi-value" id="kpi-top-cat">—</div>
+        <div class="kpi-delta" id="kpi-top-delta" style="color:var(--gray-500);">categoría</div>
+        <div class="kpi-spark-wrap">
+          <canvas id="spark-top"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- NEW 1: Donut Chart — Category Distribution -->
+    <div class="new-sec-divider">Distribución</div>
+    <div class="chart-card">
+      <div class="chart-title">Por categoría</div>
+      <div class="chart-sub">Porcentaje del total del mes</div>
+      <div class="donut-wrap">
+        <div class="donut-canvas-wrap">
+          <canvas id="donut-chart"></canvas>
+          <div class="donut-center">
+            <div class="donut-center-label">Total</div>
+            <div class="donut-center-value" id="donut-total">$0</div>
+          </div>
+        </div>
+        <div class="donut-legend" id="donut-legend"></div>
+      </div>
+    </div>
+
+    <!-- NEW 3: Comparative Bars — Top categories -->
+    <div class="chart-card">
+      <div class="chart-title">Comparativa</div>
+      <div class="chart-sub">Top categorías este mes</div>
+      <canvas id="compare-chart" height="160"></canvas>
+    </div>
+
+    <!-- NEW 2: Line chart — Weekly trend (last 8 weeks) -->
+    <div class="new-sec-divider">Evolución</div>
+    <div class="chart-card">
+      <div class="chart-title">Tendencia semanal</div>
+      <div class="chart-sub">Gasto total por semana</div>
+      <canvas id="weekly-chart" height="140"></canvas>
+    </div>
+
+    <!-- NEW 5: Gauge — Budget progress -->
+    <div class="new-sec-divider">Meta mensual</div>
+    <div class="chart-card">
+      <div class="chart-title">Progreso vs meta</div>
+      <div class="chart-sub">Presupuesto mensual estimado</div>
+      <div class="gauge-wrap">
+        <div class="gauge-canvas-wrap">
+          <canvas id="gauge-chart"></canvas>
+          <div class="gauge-center">
+            <div class="gauge-pct" id="gauge-pct">0%</div>
+            <div class="gauge-sub">del presupuesto</div>
+          </div>
+        </div>
+        <div class="gauge-labels">
+          <span>$0</span>
+          <span id="gauge-budget-label">Meta</span>
+        </div>
+        <div class="gauge-footer">
+          Gastado: <span id="gauge-spent-label">$0</span>
+          &nbsp;/&nbsp;
+          Meta: <span class="muted" id="gauge-goal-label">$0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- END NEW ADDITIONS -->
   </div>
 </div>
 
@@ -320,7 +589,6 @@ const CATS = [
 ];
 
 // ---- STATE ----
-// Limpia datos de versiones anteriores (demo data)
 if (!localStorage.getItem('spent_initialized')) {
   localStorage.removeItem('spent_v2');
   localStorage.removeItem('spent_v3');
@@ -335,8 +603,20 @@ let chartMonth   = new Date();
 let dailyChart   = null;
 let monthlyChart = null;
 
+// NEW chart instances
+let donutChart   = null;
+let compareChart = null;
+let weeklyChart  = null;
+let sparkDaily   = null;
+let sparkTop     = null;
+let gaugeChart   = null;
+
 function save() { localStorage.setItem('spent_v3', JSON.stringify(DATA)); }
 function fmt(n) { return Number(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function fmtShort(n) {
+  if (n >= 1000) return '$' + (n/1000).toFixed(1) + 'k';
+  return '$' + Math.round(n);
+}
 function uid() { return Date.now().toString(36)+Math.random().toString(36).slice(2); }
 function icon(id) { return IC[id] || IC.other; }
 function catName(id) { return (CATS.find(c=>c.id===id)||{name:id}).name; }
@@ -451,13 +731,13 @@ function renderCats() {
 // ---- CHARTS ----
 const CHART_OPTS = {
   plugins:{ legend:{display:false}, tooltip:{
-    backgroundColor:'#1c1c1c', titleColor:'#7a7a7a', bodyColor:'#f5f5f5',
-    borderColor:'#2a2a2a', borderWidth:1,
-    titleFont:{family:'DM Mono',size:10}, bodyFont:{family:'Syne',size:14,weight:'bold'}
+    backgroundColor:'#111111', titleColor:'#5a5a5a', bodyColor:'#f5f5f5',
+    borderColor:'#1c1c1c', borderWidth:1, padding:8,
+    titleFont:{family:'DM Mono',size:9}, bodyFont:{family:'DM Mono',size:11,weight:'500'}
   }},
   scales:{
-    x:{ grid:{color:'rgba(255,255,255,0.04)'}, ticks:{color:'#5a5a5a',font:{family:'DM Mono',size:9}}, border:{color:'rgba(255,255,255,0.06)'} },
-    y:{ grid:{color:'rgba(255,255,255,0.04)'}, ticks:{color:'#5a5a5a',font:{family:'DM Mono',size:9},callback:v=>'$'+v}, border:{color:'rgba(255,255,255,0.06)'} }
+    x:{ grid:{color:'rgba(255,255,255,0.04)'}, ticks:{color:'#5a5a5a',font:{family:'DM Mono',size:9}}, border:{color:'rgba(255,255,255,0.05)'} },
+    y:{ grid:{color:'rgba(255,255,255,0.04)'}, ticks:{color:'#5a5a5a',font:{family:'DM Mono',size:9},callback:v=>'$'+v}, border:{color:'rgba(255,255,255,0.05)'} }
   }
 };
 
@@ -497,8 +777,392 @@ function renderCharts() {
       { label:'Ingresos', data:mIncome, borderColor:'rgba(120,180,130,0.6)', backgroundColor:'rgba(120,180,130,0.05)', borderWidth:1.5, pointBackgroundColor:'rgba(120,180,130,0.8)', pointRadius:3, tension:0.4, fill:true }
     ]},
     options:{ responsive:true, ...CHART_OPTS,
-      plugins:{ legend:{ labels:{color:'#5a5a5a',font:{family:'DM Mono',size:9},boxWidth:10} },
+      plugins:{ legend:{ labels:{color:'#5a5a5a',font:{family:'DM Mono',size:9},boxWidth:8} },
         tooltip:{ ...CHART_OPTS.plugins.tooltip, callbacks:{ label:i=>`${i.dataset.label}: $${fmt(i.raw)}` } } }
+    }
+  });
+
+  // ---- NEW CHARTS ----
+  renderNewCharts();
+}
+
+// ============================================
+// NEW CHART RENDERING FUNCTIONS
+// ============================================
+
+// Neon green palette — shades for multiple categories
+const CAT_COLORS = [
+  'rgba(57,255,106,0.85)',
+  'rgba(57,255,106,0.55)',
+  'rgba(57,255,106,0.35)',
+  'rgba(0,220,80,0.7)',
+  'rgba(0,180,60,0.6)',
+  'rgba(100,255,150,0.65)',
+  'rgba(30,200,80,0.5)',
+  'rgba(57,255,106,0.25)',
+  'rgba(0,255,100,0.4)',
+  'rgba(80,255,130,0.6)',
+  'rgba(20,180,70,0.5)',
+  'rgba(57,255,106,0.15)',
+];
+
+const NEON       = 'rgba(57,255,106,0.9)';
+const NEON_DIM   = 'rgba(57,255,106,0.12)';
+const NEON_MID   = 'rgba(57,255,106,0.4)';
+const FONT_MONO  = 'DM Mono';
+
+const TOOLTIP_DEFAULTS = {
+  backgroundColor: '#111111',
+  titleColor: '#5a5a5a',
+  bodyColor: '#f5f5f5',
+  borderColor: '#2a2a2a',
+  borderWidth: 1,
+  titleFont: { family: FONT_MONO, size: 9 },
+  bodyFont:  { family: FONT_MONO, size: 11, weight: '500' },
+  padding: 8,
+};
+
+function getMonthExpenses(yr, mo) {
+  return DATA.filter(e => {
+    if (e.type !== 'expense') return false;
+    const d = new Date(e.date + 'T12:00:00');
+    return d.getFullYear() === yr && d.getMonth() === mo;
+  });
+}
+
+function renderNewCharts() {
+  const now = new Date();
+  const yr = now.getFullYear(), mo = now.getMonth();
+  const expenses = getMonthExpenses(yr, mo);
+
+  renderDonutChart(expenses);
+  renderCompareChart(expenses);
+  renderWeeklyChart();
+  renderKPICards(expenses, yr, mo);
+  renderGauge(expenses);
+}
+
+// ---- 1. DONUT CHART ----
+function renderDonutChart(expenses) {
+  const totals = {};
+  CATS.forEach(c => totals[c.id] = 0);
+  expenses.forEach(e => totals[e.category] = (totals[e.category]||0) + e.amount);
+  const total = expenses.reduce((s,e) => s + e.amount, 0);
+
+  const sorted = CATS.filter(c => totals[c.id] > 0).sort((a,b) => totals[b.id]-totals[a.id]);
+  const labels = sorted.map(c => c.name);
+  const values = sorted.map(c => totals[c.id]);
+  const colors = sorted.map((_,i) => CAT_COLORS[i % CAT_COLORS.length]);
+
+  document.getElementById('donut-total').textContent = fmtShort(total);
+
+  const legendEl = document.getElementById('donut-legend');
+  legendEl.innerHTML = sorted.map((c,i) => `
+    <div class="legend-item">
+      <div class="legend-dot" style="background:${colors[i]}"></div>
+      ${c.name}
+    </div>`).join('');
+
+  const ctx = document.getElementById('donut-chart').getContext('2d');
+  if (donutChart) donutChart.destroy();
+
+  if (!sorted.length) { donutChart = null; return; }
+
+  donutChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels,
+      datasets: [{
+        data: values,
+        backgroundColor: colors,
+        borderColor: '#0a0a0a',
+        borderWidth: 2,
+        hoverOffset: 4,
+      }]
+    },
+    options: {
+      responsive: true,
+      cutout: '70%',
+      animation: { duration: 700, easing: 'easeOutQuart' },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          ...TOOLTIP_DEFAULTS,
+          callbacks: {
+            label: i => ` $${fmt(i.raw)}  (${total>0?(i.raw/total*100).toFixed(1):0}%)`
+          }
+        }
+      }
+    }
+  });
+}
+
+// ---- 3. COMPARATIVE BARS ----
+function renderCompareChart(expenses) {
+  const totals = {};
+  CATS.forEach(c => totals[c.id] = 0);
+  expenses.forEach(e => totals[e.category] = (totals[e.category]||0) + e.amount);
+
+  const sorted = CATS.filter(c => totals[c.id] > 0)
+    .sort((a,b) => totals[b.id]-totals[a.id])
+    .slice(0, 6);
+
+  const labels = sorted.map(c => c.name);
+  const values = sorted.map(c => totals[c.id]);
+  const maxVal = Math.max(...values, 0.01);
+
+  const bgColors = values.map(v => v === maxVal ? NEON : 'rgba(57,255,106,0.15)');
+  const borderColors = values.map(v => v === maxVal ? NEON : 'rgba(57,255,106,0.3)');
+
+  const ctx = document.getElementById('compare-chart').getContext('2d');
+  if (compareChart) compareChart.destroy();
+
+  if (!sorted.length) { compareChart = null; return; }
+
+  compareChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        data: values,
+        backgroundColor: bgColors,
+        borderColor: borderColors,
+        borderWidth: 1,
+        borderRadius: 5,
+        hoverBackgroundColor: NEON_MID,
+      }]
+    },
+    options: {
+      responsive: true,
+      animation: { duration: 700, easing: 'easeOutQuart' },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          ...TOOLTIP_DEFAULTS,
+          callbacks: { label: i => ` $${fmt(i.raw)}` }
+        }
+      },
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: { color:'#5a5a5a', font:{ family: FONT_MONO, size: 9 } },
+          border: { color:'rgba(255,255,255,0.05)' }
+        },
+        y: {
+          grid: { color:'rgba(255,255,255,0.04)' },
+          ticks: { color:'#5a5a5a', font:{ family: FONT_MONO, size: 9 }, callback: v => fmtShort(v) },
+          border: { color:'rgba(255,255,255,0.05)' }
+        }
+      }
+    }
+  });
+}
+
+// ---- 2. WEEKLY LINE CHART ----
+function renderWeeklyChart() {
+  const now = new Date();
+  const weeks = [];
+  const labels = [];
+  for (let i = 7; i >= 0; i--) {
+    const end = new Date(now);
+    end.setDate(now.getDate() - i * 7);
+    const start = new Date(end);
+    start.setDate(end.getDate() - 6);
+    const total = DATA.filter(e => {
+      if (e.type !== 'expense') return false;
+      const d = new Date(e.date + 'T12:00:00');
+      return d >= start && d <= end;
+    }).reduce((s,e) => s+e.amount, 0);
+    weeks.push(total);
+    labels.push(end.toLocaleDateString('es',{day:'numeric',month:'short'}));
+  }
+
+  const maxW = Math.max(...weeks, 0.01);
+  const ptColors = weeks.map(v => v === maxW && v > 0 ? '#ffffff' : NEON);
+
+  const ctx = document.getElementById('weekly-chart').getContext('2d');
+  if (weeklyChart) weeklyChart.destroy();
+
+  weeklyChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        data: weeks,
+        borderColor: NEON,
+        backgroundColor: NEON_DIM,
+        borderWidth: 1.5,
+        pointBackgroundColor: ptColors,
+        pointBorderColor: 'transparent',
+        pointRadius: 3,
+        pointHoverRadius: 5,
+        tension: 0.45,
+        fill: true,
+      }]
+    },
+    options: {
+      responsive: true,
+      animation: { duration: 700, easing: 'easeOutQuart' },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          ...TOOLTIP_DEFAULTS,
+          callbacks: {
+            title: i => `Sem. al ${i[0].label}`,
+            label: i => ` $${fmt(i.raw)}`
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: { color:'#5a5a5a', font:{ family: FONT_MONO, size: 8 }, maxRotation: 30 },
+          border: { color:'rgba(255,255,255,0.05)' }
+        },
+        y: {
+          grid: { color:'rgba(255,255,255,0.04)' },
+          ticks: { color:'#5a5a5a', font:{ family: FONT_MONO, size: 9 }, callback: v => fmtShort(v) },
+          border: { color:'rgba(255,255,255,0.05)' }
+        }
+      }
+    }
+  });
+}
+
+// ---- 4. KPI SPARKLINE CARDS ----
+function renderKPICards(expenses, yr, mo) {
+  const daysElapsed = Math.max(new Date().getDate(), 1);
+  const totalSpent  = expenses.reduce((s,e) => s+e.amount, 0);
+  const dailyAvg    = totalSpent / daysElapsed;
+
+  const prevMo = mo === 0 ? 11 : mo-1;
+  const prevYr = mo === 0 ? yr-1 : yr;
+  const prevExpenses = getMonthExpenses(prevYr, prevMo);
+  const prevDays = new Date(prevYr, prevMo+1, 0).getDate();
+  const prevAvg  = prevExpenses.reduce((s,e)=>s+e.amount,0) / prevDays;
+  const delta    = prevAvg > 0 ? ((dailyAvg - prevAvg)/prevAvg*100) : 0;
+
+  document.getElementById('kpi-daily-avg').textContent = fmtShort(dailyAvg);
+  const deltaEl = document.getElementById('kpi-daily-delta');
+  deltaEl.textContent = (delta >= 0 ? '+' : '') + delta.toFixed(1) + '% vs ant.';
+  deltaEl.className = 'kpi-delta ' + (delta > 5 ? 'neg' : delta < -5 ? 'pos' : 'neutral');
+
+  // Sparkline: last 7 days spending
+  const sparkData = Array.from({length:7},(_,i) => {
+    const d = new Date(); d.setDate(d.getDate()-6+i);
+    const ds = d.toISOString().split('T')[0];
+    return DATA.filter(e => e.date===ds && e.type==='expense').reduce((s,e)=>s+e.amount,0);
+  });
+
+  const ctx1 = document.getElementById('spark-daily').getContext('2d');
+  if (sparkDaily) sparkDaily.destroy();
+  sparkDaily = new Chart(ctx1, {
+    type: 'line',
+    data: {
+      labels: sparkData.map((_,i)=>i),
+      datasets: [{
+        data: sparkData,
+        borderColor: NEON,
+        borderWidth: 1.5,
+        pointRadius: 0,
+        tension: 0.45,
+        fill: true,
+        backgroundColor: NEON_DIM,
+      }]
+    },
+    options: {
+      responsive: true,
+      animation: false,
+      plugins: { legend:{display:false}, tooltip:{enabled:false} },
+      scales: { x:{display:false}, y:{display:false} }
+    }
+  });
+
+  // Top category
+  const totals = {};
+  expenses.forEach(e => totals[e.category]=(totals[e.category]||0)+e.amount);
+  const topCat = Object.entries(totals).sort((a,b)=>b[1]-a[1])[0];
+  document.getElementById('kpi-top-cat').textContent = topCat ? fmtShort(topCat[1]) : '$0';
+  document.getElementById('kpi-top-delta').textContent = topCat ? catName(topCat[0]) : '—';
+  document.getElementById('kpi-top-delta').className = 'kpi-delta neutral';
+
+  // Sparkline: top category last 6 months
+  const topMonths = Array.from({length:6},(_,i) => {
+    const d = new Date(yr, mo-5+i, 1);
+    return getMonthExpenses(d.getFullYear(), d.getMonth())
+      .filter(e => e.category===(topCat?topCat[0]:''))
+      .reduce((s,e)=>s+e.amount, 0);
+  });
+
+  const ctx2 = document.getElementById('spark-top').getContext('2d');
+  if (sparkTop) sparkTop.destroy();
+  sparkTop = new Chart(ctx2, {
+    type: 'bar',
+    data: {
+      labels: topMonths.map((_,i)=>i),
+      datasets: [{
+        data: topMonths,
+        backgroundColor: NEON_DIM,
+        borderColor: NEON_MID,
+        borderWidth: 1,
+        borderRadius: 3,
+      }]
+    },
+    options: {
+      responsive: true,
+      animation: false,
+      plugins: { legend:{display:false}, tooltip:{enabled:false} },
+      scales: { x:{display:false}, y:{display:false} }
+    }
+  });
+}
+
+// ---- 5. GAUGE CHART ----
+function renderGauge(expenses) {
+  const spent = expenses.reduce((s,e) => s+e.amount, 0);
+
+  const now = new Date();
+  let budget = 0;
+  for (let i=1; i<=3; i++) {
+    const d = new Date(now.getFullYear(), now.getMonth()-i, 1);
+    budget += getMonthExpenses(d.getFullYear(), d.getMonth()).reduce((s,e)=>s+e.amount,0);
+  }
+  budget = Math.max((budget/3)*1.1, spent*1.2, 100);
+  const pct = Math.min(spent/budget, 1);
+
+  document.getElementById('gauge-pct').textContent = Math.round(pct*100) + '%';
+  document.getElementById('gauge-budget-label').textContent = fmtShort(budget);
+  document.getElementById('gauge-spent-label').textContent  = '$' + fmt(spent);
+  document.getElementById('gauge-goal-label').textContent   = '$' + fmt(budget);
+
+  // Color: neon green → yellow → red
+  const gaugeColor = pct < 0.6
+    ? NEON
+    : pct < 0.85
+    ? 'rgba(255,210,60,0.9)'
+    : 'rgba(192,57,43,0.9)';
+
+  const ctx = document.getElementById('gauge-chart').getContext('2d');
+  if (gaugeChart) gaugeChart.destroy();
+
+  gaugeChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      datasets: [{
+        data: [pct, 1-pct],
+        backgroundColor: [gaugeColor, 'rgba(255,255,255,0.05)'],
+        borderColor: 'transparent',
+        borderWidth: 0,
+        circumference: 180,
+        rotation: -90,
+        borderRadius: [4, 0],
+      }]
+    },
+    options: {
+      responsive: true,
+      cutout: '72%',
+      animation: { duration: 900, easing: 'easeOutQuart' },
+      plugins: { legend:{display:false}, tooltip:{enabled:false} }
     }
   });
 }
@@ -628,7 +1292,6 @@ function exportExcel() {
   const fecha = new Date().toISOString().split('T')[0];
   const filename = `spent_${fecha}.xlsx`;
 
-  // Blob download — compatible con WebView Android sin prompt
   const wbout = XLSX.write(wb, { bookType:'xlsx', type:'array' });
   const blob = new Blob([wbout], { type:'application/octet-stream' });
   const url = URL.createObjectURL(blob);
@@ -669,6 +1332,7 @@ function shareEmail() {
   const body = encodeURIComponent(buildCSVText());
   window.open(`mailto:?subject=${subject}&body=${body}`, '_blank');
 }
+
 function toast(msg) {
   const t=document.getElementById('toast');
   t.textContent=msg; t.classList.add('show');
