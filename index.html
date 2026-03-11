@@ -12,9 +12,9 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --black: #0a0a0a;
-    --gray-900: #111111;
-    --gray-800: #1c1c1c;
+    --black: #141414;
+    --gray-900: #1a1a1a;
+    --gray-800: #262626;
     --gray-700: #2a2a2a;
     --gray-600: #3d3d3d;
     --gray-500: #5a5a5a;
@@ -87,7 +87,7 @@
   nav.nav {
     display:flex; padding:0 16px;
     border-bottom:1px solid var(--gray-800);
-    background:rgba(10,10,10,0.93);
+    background:rgba(20,20,20,0.93);
     backdrop-filter:blur(10px);
     -webkit-backdrop-filter:blur(10px);
     position:sticky; top:196px; z-index:99;
@@ -148,7 +148,7 @@
   .date-label { font-size:14px; letter-spacing:0.2em; color:var(--gray-500); text-transform:uppercase; }
   .date-total { font-family:'Roboto',sans-serif; font-size:18px; font-weight:400; color:var(--gray-300); }
 
-  .expense-item { display:flex; align-items:center; padding:16px 24px; border-top:1px solid var(--gray-900); background:rgba(10,10,10,0.7); gap:14px; cursor:default; }
+  .expense-item { display:flex; align-items:center; padding:16px 24px; border-top:1px solid var(--gray-900); background:rgba(20,20,20,0.55); gap:14px; cursor:default; }
   /* white icon containers */
   .exp-icon { width:40px; height:40px; background:var(--gray-900); border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; border:1px solid var(--gray-800); color:#f5f5f5; }
   .exp-icon svg { width:18px; height:18px; stroke:#f5f5f5 !important; fill:none; }
@@ -661,7 +661,7 @@ function openTransferModal(){
     BUCKETS.forEach(b=>{
       const opt=document.createElement('option');
       opt.value=b.id;
-      opt.textContent=`${b.emoji||'🎯'} ${b.name}`;
+      opt.textContent=`${b.emoji||'🪣'} ${b.name}`;
       sel.appendChild(opt);
     });
     updateTransferDest();
@@ -689,6 +689,16 @@ function confirmTransfer(){
   toast(done?'¡Meta alcanzada! 🎉':`Transferido a ${BUCKETS[idx].emoji||'🎯'} ${BUCKETS[idx].name} ✓`);
 }
 
+
+const SVG_BUCKET = `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="#3d3d3d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+  <path d="M10 20 C10 20 8 44 24 44 C40 44 38 20 38 20 Z" stroke="#3d3d3d"/>
+  <line x1="8" y1="20" x2="40" y2="20"/>
+  <path d="M16 20 C16 20 14 10 24 10 C34 10 32 20 32 20" stroke="#3d3d3d" fill="none"/>
+  <line x1="20" y1="10" x2="17" y2="6"/>
+  <line x1="28" y1="10" x2="31" y2="6"/>
+  <path d="M17 6 Q24 2 31 6" fill="none" stroke="#3d3d3d"/>
+</svg>`;
+
 /* ── BUCKETS ── */
 function renderBuckets(){
   const ts=BUCKETS.reduce((s,b)=>s+b.saved,0);
@@ -699,7 +709,7 @@ function renderBuckets(){
     <div class="bsum-item"><div class="bsum-label">Meta total</div><div class="bsum-value">$${fmt(tg)}</div></div>
     <div class="bsum-item"><div class="bsum-label">Completados</div><div class="bsum-value">${cp}/${BUCKETS.length}</div></div>`;
   const el=document.getElementById('bucket-list');
-  if(!BUCKETS.length){el.innerHTML=`<div class="empty-state"><div class="empty-dash">🪣</div><div class="empty-text">Sin buckets todavía.<br>Crea uno para empezar a ahorrar.</div></div>`;return;}
+  if(!BUCKETS.length){el.innerHTML=`<div class="empty-state" style="padding:60px 24px;text-align:center">${SVG_BUCKET}<div style="margin-top:20px;font-size:17px;color:var(--gray-600);line-height:1.7">Sin buckets todavía.<br>Toca "+ Nuevo bucket" para comenzar.</div></div>`;return;}
   el.innerHTML=BUCKETS.map(b=>{
     const pct=b.goal>0?Math.min(b.saved/b.goal*100,100):0;
     const remaining=Math.max(b.goal-b.saved,0);
@@ -708,7 +718,7 @@ function renderBuckets(){
     if(b.deadline){const d=new Date(b.deadline+'T12:00:00');dl=d.toLocaleDateString('es',{day:'numeric',month:'short',year:'numeric'});}
     return `<div class="bucket-card${done?' complete':''}">
       <div class="bucket-top">
-        <div class="bucket-icon-name"><div class="bucket-emoji">${b.emoji||'🎯'}</div><div><div class="bucket-name">${b.name}</div>${dl?`<div class="bucket-deadline">Meta: ${dl}</div>`:''}</div></div>
+        <div class="bucket-icon-name"><div class="bucket-emoji">${b.emoji?b.emoji:`<svg width="26" height="26" viewBox="0 0 48 48" fill="none" stroke="#7a7a7a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 20 C10 20 8 44 24 44 C40 44 38 20 38 20 Z"/><line x1="8" y1="20" x2="40" y2="20"/><path d="M16 20 C16 20 14 10 24 10 C34 10 32 20 32 20" fill="none"/><line x1="20" y1="10" x2="17" y2="6"/><line x1="28" y1="10" x2="31" y2="6"/><path d="M17 6 Q24 2 31 6" fill="none"/></svg>`}</div><div><div class="bucket-name">${b.name}</div>${dl?`<div class="bucket-deadline">Meta: ${dl}</div>`:''}</div></div>
         <div class="bucket-actions"><button class="bucket-action-btn" onclick="openBucketModal('${b.id}')">✏️</button></div>
       </div>
       <div class="bucket-amounts"><div class="bucket-saved">$${fmt(b.saved)}</div><div class="bucket-goal-txt">de $${fmt(b.goal)}</div></div>
@@ -784,7 +794,7 @@ function confirmDeposit(){
 }
 
 /* ── CHARTS ── */
-const CHART_OPTS={plugins:{legend:{display:false},tooltip:{backgroundColor:'#111111',titleColor:'#5a5a5a',bodyColor:'#f5f5f5',borderColor:'#1c1c1c',borderWidth:1,padding:8,titleFont:{family:'DM Mono',size:13},bodyFont:{family:'DM Mono',size:11,weight:'500'}}},scales:{x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#e8e8e8',font:{family:'DM Mono',size:13}},border:{color:'rgba(255,255,255,0.05)'}},y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#e8e8e8',font:{family:'DM Mono',size:13},callback:v=>'$'+v},border:{color:'rgba(255,255,255,0.05)'}}}};
+const CHART_OPTS={plugins:{legend:{display:false},tooltip:{backgroundColor:'#111111',titleColor:'#5a5a5a',bodyColor:'#f5f5f5',borderColor:'#1c1c1c',borderWidth:1,padding:8,titleFont:{family:'Arial',size:13},bodyFont:{family:'Arial',size:12,weight:'500'}}},scales:{x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#e8e8e8',font:{family:'Arial',size:12}},border:{color:'rgba(255,255,255,0.05)'}},y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#e8e8e8',font:{family:'Arial',size:12},callback:v=>'$'+v},border:{color:'rgba(255,255,255,0.05)'}}}};
 
 function renderCharts(){
   const yr=chartMonth.getFullYear(),mo=chartMonth.getMonth();
@@ -798,13 +808,13 @@ function renderCharts(){
   for(let i=5;i>=0;i--){const d=new Date(now.getFullYear(),now.getMonth()-i,1);mL.push(d.toLocaleDateString('es',{month:'short'}));const m=d.getMonth(),y=d.getFullYear();const ents=DATA.filter(e=>{const ed=new Date(e.date+'T12:00:00');return ed.getMonth()===m&&ed.getFullYear()===y;});mS.push(ents.filter(e=>e.type==='expense').reduce((s,e)=>s+e.amount,0));mI.push(ents.filter(e=>e.type==='income').reduce((s,e)=>s+e.amount,0));}
   const c2=document.getElementById('monthly-chart').getContext('2d');
   if(monthlyChart) monthlyChart.destroy();
-  monthlyChart=new Chart(c2,{type:'line',data:{labels:mL,datasets:[{label:'Gastos',data:mS,borderColor:'rgba(192,57,43,0.9)',backgroundColor:'rgba(192,57,43,0.07)',borderWidth:2,pointBackgroundColor:'rgba(192,57,43,1)',pointRadius:3,tension:0.4,fill:true},{label:'Ingresos',data:mI,borderColor:'rgba(120,180,130,0.6)',backgroundColor:'rgba(120,180,130,0.05)',borderWidth:1.5,pointBackgroundColor:'rgba(120,180,130,0.8)',pointRadius:3,tension:0.4,fill:true}]},options:{responsive:true,...CHART_OPTS,plugins:{legend:{labels:{color:'#e8e8e8',font:{family:'DM Mono',size:13},boxWidth:8}},tooltip:{...CHART_OPTS.plugins.tooltip,callbacks:{label:i=>`${i.dataset.label}: $${fmt(i.raw)}`}}}}});
+  monthlyChart=new Chart(c2,{type:'line',data:{labels:mL,datasets:[{label:'Gastos',data:mS,borderColor:'rgba(192,57,43,0.9)',backgroundColor:'rgba(192,57,43,0.07)',borderWidth:2,pointBackgroundColor:'rgba(192,57,43,1)',pointRadius:3,tension:0.4,fill:true},{label:'Ingresos',data:mI,borderColor:'rgba(120,180,130,0.6)',backgroundColor:'rgba(120,180,130,0.05)',borderWidth:1.5,pointBackgroundColor:'rgba(120,180,130,0.8)',pointRadius:3,tension:0.4,fill:true}]},options:{responsive:true,...CHART_OPTS,plugins:{legend:{labels:{color:'#e8e8e8',font:{family:'Arial',size:13},boxWidth:8}},tooltip:{...CHART_OPTS.plugins.tooltip,callbacks:{label:i=>`${i.dataset.label}: $${fmt(i.raw)}`}}}}});
   renderNewCharts();
 }
 
 const CAT_COLORS=['rgba(57,255,106,0.85)','rgba(57,255,106,0.55)','rgba(57,255,106,0.35)','rgba(0,220,80,0.7)','rgba(0,180,60,0.6)','rgba(100,255,150,0.65)','rgba(30,200,80,0.5)','rgba(57,255,106,0.25)','rgba(0,255,100,0.4)','rgba(80,255,130,0.6)','rgba(20,180,70,0.5)','rgba(57,255,106,0.15)'];
-const NEON='rgba(57,255,106,0.9)',NEON_DIM='rgba(57,255,106,0.12)',NEON_MID='rgba(57,255,106,0.4)',FM='DM Mono';
-const TT={backgroundColor:'#111111',titleColor:'#5a5a5a',bodyColor:'#f5f5f5',borderColor:'#2a2a2a',borderWidth:1,titleFont:{family:FM,size:13},bodyFont:{family:FM,size:11,weight:'500'},padding:8};
+const NEON='rgba(57,255,106,0.9)',NEON_DIM='rgba(57,255,106,0.12)',NEON_MID='rgba(57,255,106,0.4)',FM='Arial';
+const TT={backgroundColor:'#111111',titleColor:'#5a5a5a',bodyColor:'#f5f5f5',borderColor:'#2a2a2a',borderWidth:1,titleFont:{family:FM,size:13},bodyFont:{family:FM,size:12,weight:'500'},padding:8};
 
 function getMonthExp(yr,mo){return DATA.filter(e=>{if(e.type!=='expense')return false;const d=new Date(e.date+'T12:00:00');return d.getFullYear()===yr&&d.getMonth()===mo;});}
 
@@ -824,7 +834,7 @@ function renderDonut(exp){
   const ctx=document.getElementById('donut-chart').getContext('2d');
   if(donutChart) donutChart.destroy();
   if(!srt.length){donutChart=null;return;}
-  donutChart=new Chart(ctx,{type:'doughnut',data:{labels:lbl,datasets:[{data:val,backgroundColor:col,borderColor:'#0a0a0a',borderWidth:2,hoverOffset:4}]},options:{responsive:true,cutout:'70%',animation:{duration:700,easing:'easeOutQuart'},plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:i=>` $${fmt(i.raw)}  (${total>0?(i.raw/total*100).toFixed(1):0}%)`}}}}});
+  donutChart=new Chart(ctx,{type:'doughnut',data:{labels:lbl,datasets:[{data:val,backgroundColor:col,borderColor:'#141414',borderWidth:2,hoverOffset:4}]},options:{responsive:true,cutout:'70%',animation:{duration:700,easing:'easeOutQuart'},plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:i=>` $${fmt(i.raw)}  (${total>0?(i.raw/total*100).toFixed(1):0}%)`}}}}});
 }
 
 function renderCompare(exp){
