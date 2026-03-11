@@ -400,12 +400,12 @@
   <div class="charts-sec">
     <div class="sec-title">Exportar registros</div>
     <div class="chart-card" style="margin-bottom:12px">
-      <div class="chart-title">CSV</div>
-      <div class="chart-sub">Compatible con Excel, Google Sheets y cualquier app de hojas de cálculo</div>
+      <div class="chart-title">Exportar datos</div>
+      <div class="chart-sub">Abre el texto CSV para copiar y pegar en Excel, Google Sheets o Notes</div>
       <div id="export-preview" style="margin-bottom:20px"></div>
       <button class="btn-export" onclick="exportCSV()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:8px"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        Exportar CSV
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:8px"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        Ver y copiar CSV
       </button>
     </div>
   </div>
@@ -1004,34 +1004,19 @@ function renderExport(){
 
 function exportCSV(){
   if(!DATA.length){toast('Sin registros para exportar');return;}
-  try{
-    const sorted=DATA.slice().sort((a,b)=>new Date(b.date)-new Date(a.date));
-    const header='ID,Fecha,Tipo,Categoria,Monto\n';
-    const rows=sorted.map(e=>[
-      e.id.slice(-8).toUpperCase(),
-      e.date,
-      e.type==='income'?'Ingreso':'Gasto',
-      catName(e.category).replace(/,/g,' '),
-      (e.type==='income'?e.amount:-e.amount).toFixed(2)
-    ].join(',')).join('\n');
-    const t=DATA.filter(e=>e.type==='expense').reduce((s,e)=>s+e.amount,0);
-    const inc=DATA.filter(e=>e.type==='income').reduce((s,e)=>s+e.amount,0);
-    const footer='\n\nTotal gastos,-'+t.toFixed(2)+'\nTotal ingresos,'+inc.toFixed(2)+'\nBalance,'+(inc-t).toFixed(2);
-    const content=header+rows+footer;
-    // Intentar descarga directa
-    const dataUri='data:text/csv;charset=utf-8,'+encodeURIComponent(content);
-    const a=document.createElement('a');
-    a.href=dataUri;
-    a.download='spent_'+new Date().toISOString().split('T')[0]+'.csv';
-    a.style.display='none';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    // Mostrar también el modal con texto por si la descarga no funciona en WebView
-    showCSVModal(content);
-  }catch(err){
-    toast('Error: '+err.message);
-  }
+  const sorted=DATA.slice().sort((a,b)=>new Date(b.date)-new Date(a.date));
+  const header='ID,Fecha,Tipo,Categoria,Monto\n';
+  const rows=sorted.map(e=>[
+    e.id.slice(-8).toUpperCase(),
+    e.date,
+    e.type==='income'?'Ingreso':'Gasto',
+    catName(e.category).replace(/,/g,' '),
+    (e.type==='income'?e.amount:-e.amount).toFixed(2)
+  ].join(',')).join('\n');
+  const t=DATA.filter(e=>e.type==='expense').reduce((s,e)=>s+e.amount,0);
+  const inc=DATA.filter(e=>e.type==='income').reduce((s,e)=>s+e.amount,0);
+  const footer='\n\nTotal gastos,-'+t.toFixed(2)+'\nTotal ingresos,'+inc.toFixed(2)+'\nBalance,'+(inc-t).toFixed(2);
+  showCSVModal(header+rows+footer);
 }
 
 function showCSVModal(content){
@@ -1039,15 +1024,17 @@ function showCSVModal(content){
   if(existing) existing.remove();
   const overlay=document.createElement('div');
   overlay.id='csv-modal-overlay';
-  overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:2000;display:flex;flex-direction:column;padding:24px;box-sizing:border-box;';
+  overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:2000;display:flex;flex-direction:column;padding:24px 20px 40px;box-sizing:border-box;';
   overlay.innerHTML=`
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-      <div style="font-family:Syne,sans-serif;font-size:17px;font-weight:700;color:#f5f5f5">Exportar CSV</div>
-      <button onclick="document.getElementById('csv-modal-overlay').remove()" style="background:var(--gray-800);border:1px solid var(--gray-700);border-radius:50%;width:32px;height:32px;color:#f5f5f5;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <div style="font-family:'Syne',sans-serif;font-size:17px;font-weight:700;color:#f5f5f5">Datos CSV</div>
+      <button onclick="document.getElementById('csv-modal-overlay').remove()" style="background:#262626;border:1px solid #2a2a2a;border-radius:50%;width:32px;height:32px;color:#f5f5f5;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
     </div>
-    <div style="font-size:11px;letter-spacing:0.12em;color:var(--gray-500);text-transform:uppercase;margin-bottom:12px;">Si no se descargó automáticamente, copia el texto:</div>
-    <textarea id="csv-text-output" readonly style="flex:1;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:12px;color:#c8c8c8;font-family:monospace;font-size:11px;padding:14px;resize:none;outline:none;line-height:1.6;">${content}</textarea>
-    <button onclick="copyCSV()" style="margin-top:12px;width:100%;background:#f5f5f5;color:#141414;border:none;border-radius:12px;padding:15px;font-family:Arial,sans-serif;font-size:16px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;">Copiar todo</button>
+    <div style="font-size:10px;letter-spacing:0.12em;color:#5a5a5a;text-transform:uppercase;margin-bottom:14px;">Copia y pega en Excel, Google Sheets o Notes</div>
+    <textarea id="csv-text-output" readonly style="flex:1;background:#1a1a1a;border:1px solid #262626;border-radius:12px;color:#a0a0a0;font-family:monospace;font-size:11px;padding:14px;resize:none;outline:none;line-height:1.7;-webkit-user-select:all;user-select:all;">${content}</textarea>
+    <button onclick="copyCSV()" style="margin-top:12px;width:100%;background:#f5f5f5;color:#141414;border:none;border-radius:12px;padding:16px;font-family:'Arial',sans-serif;font-size:16px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;">
+      Copiar todo
+    </button>
   `;
   document.body.appendChild(overlay);
 }
@@ -1055,13 +1042,16 @@ function showCSVModal(content){
 function copyCSV(){
   const ta=document.getElementById('csv-text-output');
   if(!ta) return;
-  ta.select();
   try{
-    document.execCommand('copy');
-    toast('Copiado al portapapeles ✓');
+    navigator.clipboard.writeText(ta.value).then(()=>toast('¡Copiado! ✓')).catch(()=>{
+      ta.select();ta.setSelectionRange(0,99999);
+      document.execCommand('copy');
+      toast('¡Copiado! ✓');
+    });
   }catch(e){
-    ta.setSelectionRange(0,ta.value.length);
-    toast('Selecciona el texto y copia manualmente');
+    ta.select();ta.setSelectionRange(0,99999);
+    document.execCommand('copy');
+    toast('¡Copiado! ✓');
   }
 }
 
