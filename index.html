@@ -1004,38 +1004,38 @@ function renderExport(){
 
 function exportCSV(){
   if(!DATA.length){toast('Sin registros para exportar');return;}
-  const sorted=DATA.slice().sort((a,b)=>new Date(b.date)-new Date(a.date));
-  // BOM para que Excel reconozca UTF-8 correctamente
-  const BOM='\uFEFF';
-  const header='ID,Fecha,Tipo,Categoría,Monto';
-  const rows=sorted.map(e=>[
-    e.id.slice(-8).toUpperCase(),
-    e.date,
-    e.type==='income'?'Ingreso':'Gasto',
-    `"${catName(e.category)}"`,
-    (e.type==='income'?e.amount:-e.amount).toFixed(2)
-  ].join(','));
-  const t=DATA.filter(e=>e.type==='expense').reduce((s,e)=>s+e.amount,0);
-  const inc=DATA.filter(e=>e.type==='income').reduce((s,e)=>s+e.amount,0);
-  rows.push('',',,Total gastos,-'+t.toFixed(2));
-  rows.push(',,Total ingresos,'+inc.toFixed(2));
-  rows.push(',,Balance,'+(inc-t).toFixed(2));
-  const csv=BOM+header+'\n'+rows.join('\n');
-  const fecha=new Date().toISOString().split('T')[0];
-  const uri='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
-  // Para WebView Android: window.location es lo más confiable
   try{
+    const sorted=DATA.slice().sort((a,b)=>new Date(b.date)-new Date(a.date));
+    const BOM='\uFEFF';
+    const header='ID,Fecha,Tipo,Categoria,Monto\n';
+    const rows=sorted.map(e=>[
+      e.id.slice(-8).toUpperCase(),
+      e.date,
+      e.type==='income'?'Ingreso':'Gasto',
+      catName(e.category).replace(/,/g,' '),
+      (e.type==='income'?e.amount:-e.amount).toFixed(2)
+    ].join(',')).join('\n');
+    const t=DATA.filter(e=>e.type==='expense').reduce((s,e)=>s+e.amount,0);
+    const inc=DATA.filter(e=>e.type==='income').reduce((s,e)=>s+e.amount,0);
+    const footer='\n\nTotal gastos,-'+t.toFixed(2)+'\nTotal ingresos,'+inc.toFixed(2)+'\nBalance,'+(inc-t).toFixed(2);
+    const content=BOM+header+rows+footer;
+    const blob=new Blob([content],{type:'text/csv;charset=utf-8'});
+    const url=URL.createObjectURL(blob);
+    const fecha=new Date().toISOString().split('T')[0];
     const a=document.createElement('a');
-    a.href=uri;
-    a.download=`spent_${fecha}.csv`;
+    a.href=url;
+    a.download='spent_'+fecha+'.csv';
     a.style.display='none';
     document.body.appendChild(a);
     a.click();
-    setTimeout(()=>document.body.removeChild(a),500);
-  }catch(e){
-    window.location.href=uri;
+    setTimeout(function(){
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    },1000);
+    toast('CSV exportado ✓');
+  }catch(err){
+    toast('Error al exportar: '+err.message);
   }
-  toast('CSV listo ✓');
 }
 
 
