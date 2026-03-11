@@ -441,7 +441,6 @@
     <div class="modal-handle"></div>
     <div class="modal-title" id="bucket-modal-title">Nuevo bucket</div>
     <div class="form-group"><label class="form-label">Nombre del objetivo</label><input type="text" class="input-plain" id="bkt-name" placeholder="Ej: Vacaciones, Auto, Emergencia"></div>
-    <div class="form-group"><label class="form-label">Emoji / Ícono</label><input type="text" class="input-plain" id="bkt-emoji" placeholder="🪣" maxlength="4" style="font-size:28px;text-align:center;"></div>
     <div class="form-group"><label class="form-label">Meta de ahorro ($)</label><div class="amount-wrap"><span class="currency">$</span><input type="number" class="input-amount" id="bkt-goal" placeholder="0.00" step="0.01" min="0" inputmode="decimal"></div></div>
     <div class="form-group"><label class="form-label">Monto inicial ahorrado ($)</label><div class="amount-wrap"><span class="currency">$</span><input type="number" class="input-amount" id="bkt-initial" placeholder="0.00" step="0.01" min="0" inputmode="decimal"></div></div>
     <div class="form-group"><label class="form-label">Fecha límite (opcional)</label><input type="date" class="input-plain" id="bkt-deadline"></div>
@@ -729,13 +728,9 @@ function confirmTransfer(){
 }
 
 
-const SVG_BUCKET = `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="#3d3d3d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
-  <path d="M10 20 C10 20 8 44 24 44 C40 44 38 20 38 20 Z" stroke="#3d3d3d"/>
-  <line x1="8" y1="20" x2="40" y2="20"/>
-  <path d="M16 20 C16 20 14 10 24 10 C34 10 32 20 32 20" stroke="#3d3d3d" fill="none"/>
-  <line x1="20" y1="10" x2="17" y2="6"/>
-  <line x1="28" y1="10" x2="31" y2="6"/>
-  <path d="M17 6 Q24 2 31 6" fill="none" stroke="#3d3d3d"/>
+const SVG_BUCKET = `<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#3d3d3d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
+  <path d="M12 8v4l3 3"/>
 </svg>`;
 
 /* ── BUCKETS ── */
@@ -757,8 +752,14 @@ function renderBuckets(){
     if(b.deadline){const d=new Date(b.deadline+'T12:00:00');dl=d.toLocaleDateString('es',{day:'numeric',month:'short',year:'numeric'});}
     return `<div class="bucket-card${done?' complete':''}">
       <div class="bucket-top">
-        <div class="bucket-icon-name"><div class="bucket-emoji">${b.emoji?b.emoji:`<svg width="26" height="26" viewBox="0 0 48 48" fill="none" stroke="#7a7a7a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 20 C10 20 8 44 24 44 C40 44 38 20 38 20 Z"/><line x1="8" y1="20" x2="40" y2="20"/><path d="M16 20 C16 20 14 10 24 10 C34 10 32 20 32 20" fill="none"/><line x1="20" y1="10" x2="17" y2="6"/><line x1="28" y1="10" x2="31" y2="6"/><path d="M17 6 Q24 2 31 6" fill="none"/></svg>`}</div><div><div class="bucket-name">${b.name}</div>${dl?`<div class="bucket-deadline">Meta: ${dl}</div>`:''}</div></div>
-        <div class="bucket-actions"><button class="bucket-action-btn" onclick="openBucketModal('${b.id}')">✏️</button></div>
+        <div class="bucket-icon-name">
+          <div class="bucket-emoji"><svg width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="#ffffff" stroke-width="1.4" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"><circle cx="13" cy="13" r="11"/><line x1="8" y1="10" x2="18" y2="10"/><line x1="8" y1="13" x2="18" y2="13"/><line x1="8" y1="16" x2="18" y2="16"/></svg></div>
+          <div><div class="bucket-name">${b.name}</div>${dl?`<div class="bucket-deadline">Meta: ${dl}</div>`:''}</div>
+        </div>
+        <div class="bucket-actions">
+          <button class="bucket-action-btn" onclick="openBucketModal('${b.id}')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+          <button class="bucket-action-btn" onclick="deleteBucket('${b.id}')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
+        </div>
       </div>
       <div class="bucket-amounts"><div class="bucket-saved">$${fmt(b.saved)}</div><div class="bucket-goal-txt">de $${fmt(b.goal)}</div></div>
       <div class="bucket-progress-bg"><div class="bucket-progress-fill" style="width:${pct}%"></div></div>
@@ -776,7 +777,6 @@ function openBucketModal(id){
   const b=id?BUCKETS.find(x=>x.id===id):null;
   document.getElementById('bucket-modal-title').textContent=b?'Editar bucket':'Nuevo bucket';
   document.getElementById('bkt-name').value=b?b.name:'';
-  document.getElementById('bkt-emoji').value=b?(b.emoji||''):'';
   document.getElementById('bkt-goal').value=b?b.goal:'';
   document.getElementById('bkt-initial').value=b?b.saved:'';
   document.getElementById('bkt-deadline').value=b?(b.deadline||''):'';
@@ -788,7 +788,6 @@ function closeBucketModal(){ document.getElementById('bucket-modal').classList.r
 function bgCloseBucket(e){ if(e.target===document.getElementById('bucket-modal')) closeBucketModal(); }
 function saveBucket(){
   const name=document.getElementById('bkt-name').value.trim();
-  const emoji=document.getElementById('bkt-emoji').value.trim()||'🎯';
   const goal=parseFloat(document.getElementById('bkt-goal').value)||0;
   const initial=parseFloat(document.getElementById('bkt-initial').value)||0;
   const deadline=document.getElementById('bkt-deadline').value;
@@ -796,12 +795,16 @@ function saveBucket(){
   if(goal<=0){toast('Ingresa una meta válida');return;}
   if(editingBucket){
     const idx=BUCKETS.findIndex(b=>b.id===editingBucket);
-    if(idx>=0) BUCKETS[idx]={...BUCKETS[idx],name,emoji,goal,saved:initial,deadline};
+    if(idx>=0) BUCKETS[idx]={...BUCKETS[idx],name,goal,saved:initial,deadline};
   } else {
-    BUCKETS.push({id:uid(),name,emoji,goal,saved:initial,deadline,createdAt:new Date().toISOString()});
+    BUCKETS.push({id:uid(),name,goal,saved:initial,deadline,createdAt:new Date().toISOString()});
   }
   saveBuckets();closeBucketModal();renderBuckets();
   toast(editingBucket?'Bucket actualizado ✓':'Bucket creado ✓');
+}
+function deleteBucket(id){
+  BUCKETS=BUCKETS.filter(b=>b.id!==id);
+  saveBuckets();renderBuckets();toast('Bucket eliminado');
 }
 function deleteBucketFromModal(){
   if(!editingBucket) return;
