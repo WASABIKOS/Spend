@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -262,21 +262,40 @@
   .transfer-info-value.success-val { color:var(--success); }
   .transfer-arrow { font-size:20px; color:var(--gray-500); }
 
-  /* ── CHART EXPAND ── */
-  .chart-expand-btn{position:absolute;top:14px;right:14px;background:var(--gray-800);border:1px solid var(--gray-700);border-radius:8px;color:var(--gray-400);width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.15s;z-index:5;}
-  .chart-expand-btn:hover{background:var(--gray-700);color:var(--white);}
+  /* ── BLOQUEAR ORIENTACIÓN HORIZONTAL ── */
+  #landscape-block {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: var(--black);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    text-align: center;
+    padding: 32px;
+  }
+  #landscape-block svg { opacity: 0.5; }
+  #landscape-block p { font-family: 'Syne', sans-serif; font-size: 15px; color: var(--gray-400); letter-spacing: 0.1em; }
+  @media (orientation: landscape) {
+    #landscape-block { display: flex; }
+  }
   .chart-card{position:relative;}
-  .chart-fullscreen{position:fixed;inset:0;z-index:1000;background:var(--black);display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;padding:60px 16px 24px;animation:fadeIn 0.2s ease;box-sizing:border-box;}
-  .chart-fullscreen .fs-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--white);margin-bottom:16px;letter-spacing:0.05em;text-align:center;flex-shrink:0;}
-  .fs-canvas-wrap{flex:1;min-height:0;position:relative;width:100%;}
-  .fs-canvas-wrap canvas{position:absolute;inset:0;width:100%!important;height:100%!important;}
-  .chart-fullscreen .fs-close{position:absolute;top:16px;right:16px;background:var(--gray-800);border:1px solid var(--gray-700);border-radius:50%;width:36px;height:36px;color:var(--white);font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:10;}
   @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 </style>
 </head>
 <body>
 
 <canvas id="bg-canvas"></canvas>
+
+<div id="landscape-block">
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="2" y="7" width="20" height="14" rx="2"/>
+    <path d="M16 2l-4 4-4-4"/>
+  </svg>
+  <p>Rota tu teléfono a<br>modo vertical para<br>continuar</p>
+</div>
 
 <div class="header">
   <div class="header-top">
@@ -329,24 +348,24 @@
     <button class="month-nav" onclick="changeChartMonth(1)">&#8250;</button>
   </div>
   <div class="charts-sec">
-    <div class="chart-card"><button class="chart-expand-btn" onclick="expandChart('daily-chart','Gasto diario')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></button><div class="chart-title">Gasto diario</div><div class="chart-sub">Gastos por día este mes</div><canvas id="daily-chart" height="140"></canvas></div>
-    <div class="chart-card"><button class="chart-expand-btn" onclick="expandChart('monthly-chart','Tendencia mensual')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></button><div class="chart-title">Tendencia mensual</div><div class="chart-sub">2 meses anteriores + mes actual</div><canvas id="monthly-chart" height="140"></canvas></div>
+    <div class="chart-card"><div class="chart-title">Gasto diario</div><div class="chart-sub">Gastos por día este mes</div><canvas id="daily-chart" height="140"></canvas></div>
+    <div class="chart-card"><div class="chart-title">Tendencia mensual</div><div class="chart-sub">2 meses anteriores + mes actual</div><canvas id="monthly-chart" height="140"></canvas></div>
     <div class="new-sec-divider">Indicadores clave</div>
     <div class="kpi-row">
       <div class="kpi-card"><div class="kpi-label">Promedio diario</div><div class="kpi-value" id="kpi-daily-avg">$0</div><div class="kpi-delta pos" id="kpi-daily-delta">— vs anterior</div><div class="kpi-spark-wrap"><canvas id="spark-daily"></canvas></div></div>
       <div class="kpi-card"><div class="kpi-label">Mayor gasto</div><div class="kpi-value" id="kpi-top-cat">—</div><div class="kpi-delta neutral" id="kpi-top-delta">categoría</div><div class="kpi-spark-wrap"><canvas id="spark-top"></canvas></div></div>
     </div>
     <div class="new-sec-divider">Distribución</div>
-    <div class="chart-card"><button class="chart-expand-btn" onclick="expandChart('donut-chart','Por categoría')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></button>
+    <div class="chart-card">
       <div class="chart-title">Por categoría</div><div class="chart-sub">Porcentaje del total del mes</div>
       <div class="donut-wrap">
         <div class="donut-canvas-wrap"><canvas id="donut-chart"></canvas><div class="donut-center"><div class="donut-center-label">Total</div><div class="donut-center-value" id="donut-total">$0</div></div></div>
         <div class="donut-legend" id="donut-legend"></div>
       </div>
     </div>
-    <div class="chart-card"><button class="chart-expand-btn" onclick="expandChart('compare-chart','Comparativa')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></button><div class="chart-title">Comparativa</div><div class="chart-sub">Top categorías este mes</div><canvas id="compare-chart" height="160"></canvas></div>
+    <div class="chart-card"><div class="chart-title">Comparativa</div><div class="chart-sub">Top categorías este mes</div><canvas id="compare-chart" height="160"></canvas></div>
     <div class="new-sec-divider">Evolución</div>
-    <div class="chart-card"><button class="chart-expand-btn" onclick="expandChart('weekly-chart','Tendencia semanal')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></button><div class="chart-title">Tendencia semanal</div><div class="chart-sub">Semanas del mes seleccionado</div><canvas id="weekly-chart" height="140"></canvas></div>
+    <div class="chart-card"><div class="chart-title">Tendencia semanal</div><div class="chart-sub">Semanas del mes seleccionado</div><canvas id="weekly-chart" height="140"></canvas></div>
   </div>
 </div>
 
@@ -1030,60 +1049,16 @@ function shareWhatsApp(){if(!DATA.length){toast('Sin registros');return;}window.
 function shareEmail(){if(!DATA.length){toast('Sin registros');return;}window.open(`mailto:?subject=${encodeURIComponent('Registros Spent — '+new Date().toLocaleDateString('es'))}&body=${encodeURIComponent(buildCSVText())}`,'_blank');}
 
 
-/* ── CHART EXPAND ── */
-let fsChart=null;
-let fsResizeObs=null;
-
-function expandChart(canvasId, title){
-  const origCanvas=document.getElementById(canvasId);
-  const chartInst=Chart.getChart(origCanvas);
-  if(!chartInst) return;
-
-  const existing=document.getElementById('chart-fs-overlay');
-  if(existing) existing.remove();
-
-  const overlay=document.createElement('div');
-  overlay.id='chart-fs-overlay';
-  overlay.className='chart-fullscreen';
-
-  overlay.innerHTML=`
-    <button class="fs-close" onclick="closeExpandChart()">✕</button>
-    <div class="fs-title">${title}</div>
-    <div class="fs-canvas-wrap" id="fs-canvas-wrap"><canvas id="fs-canvas"></canvas></div>
-  `;
-  document.body.appendChild(overlay);
-
-  // Deep clone config safely
-  let cfg;
-  try{ cfg=JSON.parse(JSON.stringify(chartInst.config)); }catch(e){ return; }
-  if(!cfg.options) cfg.options={};
-  cfg.options.responsive=true;
-  cfg.options.maintainAspectRatio=false;
-  cfg.options.animation={duration:300};
-
-  const fsCanvas=document.getElementById('fs-canvas');
-  if(fsChart){ fsChart.destroy(); fsChart=null; }
-  fsChart=new Chart(fsCanvas.getContext('2d'), cfg);
-
-  // Auto-resize on orientation change or window resize
-  function handleFsResize(){
-    if(!fsChart) return;
-    setTimeout(()=>{ fsChart.resize(); },80);
-  }
-  window.addEventListener('resize', handleFsResize);
-  overlay._cleanupResize = ()=>window.removeEventListener('resize', handleFsResize);
-}
-
-function closeExpandChart(){
-  const overlay=document.getElementById('chart-fs-overlay');
-  if(overlay){
-    if(overlay._cleanupResize) overlay._cleanupResize();
-    overlay.remove();
-  }
-  if(fsChart){fsChart.destroy();fsChart=null;}
-}
-
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}
+
+// Bloquear orientación vertical
+(function(){
+  try{
+    if(screen.orientation&&screen.orientation.lock){
+      screen.orientation.lock('portrait').catch(()=>{});
+    }
+  }catch(e){}
+})();
 </script>
 </body>
 </html>
