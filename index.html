@@ -261,6 +261,17 @@
   .transfer-info-value { font-family:'Roboto',sans-serif; font-size:20px; font-weight:500; }
   .transfer-info-value.success-val { color:var(--success); }
   .transfer-arrow { font-size:20px; color:var(--gray-500); }
+
+  /* ── CHART EXPAND ── */
+  .chart-expand-btn{position:absolute;top:14px;right:14px;background:var(--gray-800);border:1px solid var(--gray-700);border-radius:8px;color:var(--gray-400);width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.15s;z-index:5;}
+  .chart-expand-btn:hover{background:var(--gray-700);color:var(--white);}
+  .chart-card{position:relative;}
+  .chart-fullscreen{position:fixed;inset:0;z-index:1000;background:var(--black);display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;padding:60px 16px 24px;animation:fadeIn 0.2s ease;box-sizing:border-box;}
+  .chart-fullscreen .fs-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--white);margin-bottom:16px;letter-spacing:0.05em;text-align:center;flex-shrink:0;}
+  .fs-canvas-wrap{flex:1;min-height:0;position:relative;width:100%;}
+  .fs-canvas-wrap canvas{position:absolute;inset:0;width:100%!important;height:100%!important;}
+  .chart-fullscreen .fs-close{position:absolute;top:16px;right:16px;background:var(--gray-800);border:1px solid var(--gray-700);border-radius:50%;width:36px;height:36px;color:var(--white);font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:10;}
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 </style>
 </head>
 <body>
@@ -318,24 +329,24 @@
     <button class="month-nav" onclick="changeChartMonth(1)">&#8250;</button>
   </div>
   <div class="charts-sec">
-    <div class="chart-card"><div class="chart-title">Gasto diario</div><div class="chart-sub">Gastos por día este mes</div><canvas id="daily-chart" height="140"></canvas></div>
-    <div class="chart-card"><div class="chart-title">Tendencia mensual</div><div class="chart-sub">Últimos 6 meses</div><canvas id="monthly-chart" height="140"></canvas></div>
+    <div class="chart-card"><button class="chart-expand-btn" onclick="expandChart('daily-chart','Gasto diario')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></button><div class="chart-title">Gasto diario</div><div class="chart-sub">Gastos por día este mes</div><canvas id="daily-chart" height="140"></canvas></div>
+    <div class="chart-card"><button class="chart-expand-btn" onclick="expandChart('monthly-chart','Tendencia mensual')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></button><div class="chart-title">Tendencia mensual</div><div class="chart-sub">2 meses anteriores + mes actual</div><canvas id="monthly-chart" height="140"></canvas></div>
     <div class="new-sec-divider">Indicadores clave</div>
     <div class="kpi-row">
       <div class="kpi-card"><div class="kpi-label">Promedio diario</div><div class="kpi-value" id="kpi-daily-avg">$0</div><div class="kpi-delta pos" id="kpi-daily-delta">— vs anterior</div><div class="kpi-spark-wrap"><canvas id="spark-daily"></canvas></div></div>
       <div class="kpi-card"><div class="kpi-label">Mayor gasto</div><div class="kpi-value" id="kpi-top-cat">—</div><div class="kpi-delta neutral" id="kpi-top-delta">categoría</div><div class="kpi-spark-wrap"><canvas id="spark-top"></canvas></div></div>
     </div>
     <div class="new-sec-divider">Distribución</div>
-    <div class="chart-card">
+    <div class="chart-card"><button class="chart-expand-btn" onclick="expandChart('donut-chart','Por categoría')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></button>
       <div class="chart-title">Por categoría</div><div class="chart-sub">Porcentaje del total del mes</div>
       <div class="donut-wrap">
         <div class="donut-canvas-wrap"><canvas id="donut-chart"></canvas><div class="donut-center"><div class="donut-center-label">Total</div><div class="donut-center-value" id="donut-total">$0</div></div></div>
         <div class="donut-legend" id="donut-legend"></div>
       </div>
     </div>
-    <div class="chart-card"><div class="chart-title">Comparativa</div><div class="chart-sub">Top categorías este mes</div><canvas id="compare-chart" height="160"></canvas></div>
+    <div class="chart-card"><button class="chart-expand-btn" onclick="expandChart('compare-chart','Comparativa')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></button><div class="chart-title">Comparativa</div><div class="chart-sub">Top categorías este mes</div><canvas id="compare-chart" height="160"></canvas></div>
     <div class="new-sec-divider">Evolución</div>
-    <div class="chart-card"><div class="chart-title">Tendencia semanal</div><div class="chart-sub">Gasto total por semana</div><canvas id="weekly-chart" height="140"></canvas></div>
+    <div class="chart-card"><button class="chart-expand-btn" onclick="expandChart('weekly-chart','Tendencia semanal')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></button><div class="chart-title">Tendencia semanal</div><div class="chart-sub">Semanas del mes seleccionado</div><canvas id="weekly-chart" height="140"></canvas></div>
   </div>
 </div>
 
@@ -344,6 +355,12 @@
   <div class="filter-bar">
     <div class="filter-chip active" onclick="setCatPeriod(this,'month')">Este mes</div>
     <div class="filter-chip" onclick="setCatPeriod(this,'all')">Todo</div>
+  </div>
+  <div style="padding:8px 20px 0">
+    <div style="position:relative">
+      <input type="text" id="cat-search" oninput="renderCats()" placeholder="Buscar categoría..." style="width:100%;background:var(--gray-800);border:1px solid var(--gray-700);border-radius:12px;color:var(--white);font-family:'DM Mono',monospace;font-size:13px;padding:11px 16px 11px 38px;outline:none;letter-spacing:0.05em;">
+      <svg style="position:absolute;left:12px;top:50%;transform:translateY(-50%);opacity:0.4;pointer-events:none" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </div>
   </div>
   <div class="charts-sec" style="padding-top:8px"><div class="sec-title">Desglose por categoría</div><div id="cat-breakdown"></div></div>
 </div>
@@ -392,7 +409,7 @@
     <div class="modal-title">Nuevo registro</div>
     <div class="form-group"><div class="type-toggle"><button class="type-btn active" id="btn-expense" onclick="setType('expense')">Gasto</button><button class="type-btn" id="btn-income" onclick="setType('income')">Ingreso</button></div></div>
     <div class="form-group"><label class="form-label">Monto</label><div class="amount-wrap"><span class="currency">$</span><input type="number" class="input-amount" id="inp-amount" placeholder="0.00" step="0.01" min="0" inputmode="decimal"></div></div>
-    <div class="form-group"><label class="form-label">Descripción</label><input type="text" class="input-plain" id="inp-desc" placeholder="¿En qué gastaste?"></div>
+    <div class="form-group"><label class="form-label">Descripción</label><input type="text" class="input-plain" id="inp-desc" placeholder="¿En qué gastaste?" id="inp-desc-placeholder"></div>
     <div class="form-group" id="cat-group"><label class="form-label">Categoría</label><div class="cat-grid" id="cat-picker"></div></div>
     <div class="form-group"><label class="form-label">Fecha</label><input type="date" class="input-plain" id="inp-date"></div>
     <button class="btn-submit" onclick="addEntry()">Guardar registro</button>
@@ -405,7 +422,7 @@
     <div class="modal-handle"></div>
     <div class="modal-title" id="bucket-modal-title">Nuevo bucket</div>
     <div class="form-group"><label class="form-label">Nombre del objetivo</label><input type="text" class="input-plain" id="bkt-name" placeholder="Ej: Vacaciones, Auto, Emergencia"></div>
-    <div class="form-group"><label class="form-label">Emoji / Ícono</label><input type="text" class="input-plain" id="bkt-emoji" placeholder="🎯" maxlength="4" style="font-size:28px;text-align:center;"></div>
+    <div class="form-group"><label class="form-label">Emoji / Ícono</label><input type="text" class="input-plain" id="bkt-emoji" placeholder="🪣" maxlength="4" style="font-size:28px;text-align:center;"></div>
     <div class="form-group"><label class="form-label">Meta de ahorro ($)</label><div class="amount-wrap"><span class="currency">$</span><input type="number" class="input-amount" id="bkt-goal" placeholder="0.00" step="0.01" min="0" inputmode="decimal"></div></div>
     <div class="form-group"><label class="form-label">Monto inicial ahorrado ($)</label><div class="amount-wrap"><span class="currency">$</span><input type="number" class="input-amount" id="bkt-initial" placeholder="0.00" step="0.01" min="0" inputmode="decimal"></div></div>
     <div class="form-group"><label class="form-label">Fecha límite (opcional)</label><input type="date" class="input-plain" id="bkt-deadline"></div>
@@ -631,9 +648,12 @@ function renderCats(){
   const totals={};CATS.forEach(c=>totals[c.id]=0);
   entries.forEach(e=>totals[e.category]=(totals[e.category]||0)+e.amount);
   const max=Math.max(...Object.values(totals),0.01);
-  const sorted=CATS.filter(c=>totals[c.id]>0).sort((a,b)=>totals[b.id]-totals[a.id]);
+  const searchEl=document.getElementById('cat-search');
+  const q=(searchEl?searchEl.value.trim().toLowerCase():'');
+  let sorted=CATS.filter(c=>totals[c.id]>0).sort((a,b)=>totals[b.id]-totals[a.id]);
+  if(q) sorted=sorted.filter(c=>c.name.toLowerCase().includes(q));
   const el=document.getElementById('cat-breakdown');
-  if(!sorted.length){el.innerHTML=`<div class="empty-state"><div class="empty-dash">—</div><div class="empty-text">Sin gastos en este período.</div></div>`;return;}
+  if(!sorted.length){el.innerHTML=`<div class="empty-state"><div class="empty-dash">—</div><div class="empty-text">${q?'Sin categorías que coincidan.':'Sin gastos en este período.'}</div></div>`;return;}
   el.innerHTML=sorted.map(c=>`<div class="cat-row">
     <div class="cat-row-icon">${icon(c.id)}</div>
     <div class="cat-row-info"><div class="cat-row-name">${c.name}</div><div class="bar-bg"><div class="bar-fill" style="width:${totals[c.id]/max*100}%"></div></div></div>
@@ -794,7 +814,7 @@ function confirmDeposit(){
 }
 
 /* ── CHARTS ── */
-const CHART_OPTS={plugins:{legend:{display:false},tooltip:{backgroundColor:'#111111',titleColor:'#5a5a5a',bodyColor:'#f5f5f5',borderColor:'#1c1c1c',borderWidth:1,padding:8,titleFont:{family:'Arial',size:13},bodyFont:{family:'Arial',size:12,weight:'500'}}},scales:{x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#e8e8e8',font:{family:'Arial',size:12}},border:{color:'rgba(255,255,255,0.05)'}},y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#e8e8e8',font:{family:'Arial',size:12},callback:v=>'$'+v},border:{color:'rgba(255,255,255,0.05)'}}}};
+const CHART_OPTS={plugins:{legend:{display:false},tooltip:{backgroundColor:'#111111',titleColor:'#5a5a5a',bodyColor:'#f5f5f5',borderColor:'#1c1c1c',borderWidth:1,padding:8,titleFont:{family:'Roboto',size:13},bodyFont:{family:'Roboto',size:12,weight:'500'}}},scales:{x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#e8e8e8',font:{family:'Roboto',size:12}},border:{color:'rgba(255,255,255,0.05)'}},y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#e8e8e8',font:{family:'Roboto',size:12},callback:v=>'$'+v},border:{color:'rgba(255,255,255,0.05)'}}}};
 
 function renderCharts(){
   const yr=chartMonth.getFullYear(),mo=chartMonth.getMonth();
@@ -804,8 +824,9 @@ function renderCharts(){
   const c1=document.getElementById('daily-chart').getContext('2d');
   if(dailyChart) dailyChart.destroy();
   dailyChart=new Chart(c1,{type:'bar',data:{labels,datasets:[{data:daily,backgroundColor:'rgba(200,200,200,0.12)',borderColor:'rgba(200,200,200,0.5)',borderWidth:1,borderRadius:4,hoverBackgroundColor:'rgba(240,240,240,0.28)'}]},options:{responsive:true,...CHART_OPTS,plugins:{...CHART_OPTS.plugins,tooltip:{...CHART_OPTS.plugins.tooltip,callbacks:{title:i=>`Día ${i[0].label}`,label:i=>`$${fmt(i.raw)}`}}}}});
-  const now=new Date();const mL=[],mS=[],mI=[];
-  for(let i=5;i>=0;i--){const d=new Date(now.getFullYear(),now.getMonth()-i,1);mL.push(d.toLocaleDateString('es',{month:'short'}));const m=d.getMonth(),y=d.getFullYear();const ents=DATA.filter(e=>{const ed=new Date(e.date+'T12:00:00');return ed.getMonth()===m&&ed.getFullYear()===y;});mS.push(ents.filter(e=>e.type==='expense').reduce((s,e)=>s+e.amount,0));mI.push(ents.filter(e=>e.type==='income').reduce((s,e)=>s+e.amount,0));}
+  const mL=[],mS=[],mI=[];
+  // 2 meses anteriores + mes actual
+  for(let i=2;i>=0;i--){const d=new Date(chartMonth.getFullYear(),chartMonth.getMonth()-i,1);const isCurrentMonth=(i===0);const label=d.toLocaleDateString('es',{month:'short',year:'2-digit'});mL.push(isCurrentMonth?label+'*':label);const m=d.getMonth(),y=d.getFullYear();const ents=DATA.filter(e=>{const ed=new Date(e.date+'T12:00:00');return ed.getMonth()===m&&ed.getFullYear()===y;});mS.push(ents.filter(e=>e.type==='expense').reduce((s,e)=>s+e.amount,0));mI.push(ents.filter(e=>e.type==='income').reduce((s,e)=>s+e.amount,0));}
   const c2=document.getElementById('monthly-chart').getContext('2d');
   if(monthlyChart) monthlyChart.destroy();
   monthlyChart=new Chart(c2,{type:'line',data:{labels:mL,datasets:[{label:'Gastos',data:mS,borderColor:'rgba(192,57,43,0.9)',backgroundColor:'rgba(192,57,43,0.07)',borderWidth:2,pointBackgroundColor:'rgba(192,57,43,1)',pointRadius:3,tension:0.4,fill:true},{label:'Ingresos',data:mI,borderColor:'rgba(120,180,130,0.6)',backgroundColor:'rgba(120,180,130,0.05)',borderWidth:1.5,pointBackgroundColor:'rgba(120,180,130,0.8)',pointRadius:3,tension:0.4,fill:true}]},options:{responsive:true,...CHART_OPTS,plugins:{legend:{labels:{color:'#e8e8e8',font:{family:'Arial',size:13},boxWidth:8}},tooltip:{...CHART_OPTS.plugins.tooltip,callbacks:{label:i=>`${i.dataset.label}: $${fmt(i.raw)}`}}}}});
@@ -813,7 +834,7 @@ function renderCharts(){
 }
 
 const CAT_COLORS=['rgba(57,255,106,0.85)','rgba(57,255,106,0.55)','rgba(57,255,106,0.35)','rgba(0,220,80,0.7)','rgba(0,180,60,0.6)','rgba(100,255,150,0.65)','rgba(30,200,80,0.5)','rgba(57,255,106,0.25)','rgba(0,255,100,0.4)','rgba(80,255,130,0.6)','rgba(20,180,70,0.5)','rgba(57,255,106,0.15)'];
-const NEON='rgba(57,255,106,0.9)',NEON_DIM='rgba(57,255,106,0.12)',NEON_MID='rgba(57,255,106,0.4)',FM='Arial';
+const NEON='rgba(57,255,106,0.9)',NEON_DIM='rgba(57,255,106,0.12)',NEON_MID='rgba(57,255,106,0.4)',FM='Roboto';
 const TT={backgroundColor:'#111111',titleColor:'#5a5a5a',bodyColor:'#f5f5f5',borderColor:'#2a2a2a',borderWidth:1,titleFont:{family:FM,size:13},bodyFont:{family:FM,size:12,weight:'500'},padding:8};
 
 function getMonthExp(yr,mo){return DATA.filter(e=>{if(e.type!=='expense')return false;const d=new Date(e.date+'T12:00:00');return d.getFullYear()===yr&&d.getMonth()===mo;});}
@@ -834,7 +855,7 @@ function renderDonut(exp){
   const ctx=document.getElementById('donut-chart').getContext('2d');
   if(donutChart) donutChart.destroy();
   if(!srt.length){donutChart=null;return;}
-  donutChart=new Chart(ctx,{type:'doughnut',data:{labels:lbl,datasets:[{data:val,backgroundColor:col,borderColor:'#141414',borderWidth:2,hoverOffset:4}]},options:{responsive:true,cutout:'70%',animation:{duration:700,easing:'easeOutQuart'},plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:i=>` $${fmt(i.raw)}  (${total>0?(i.raw/total*100).toFixed(1):0}%)`}}}}});
+  donutChart=new Chart(ctx,{type:'doughnut',data:{labels:lbl,datasets:[{data:val,backgroundColor:col,borderColor:'#141414',borderWidth:5,hoverOffset:8}]},options:{responsive:true,cutout:'70%',animation:{duration:700,easing:'easeOutQuart'},plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:i=>` $${fmt(i.raw)}  (${total>0?(i.raw/total*100).toFixed(1):0}%)`}}}}});
 }
 
 function renderCompare(exp){
@@ -849,16 +870,34 @@ function renderCompare(exp){
 }
 
 function renderWeekly(){
-  const now=new Date();const wk=[],lb=[];
-  for(let i=7;i>=0;i--){const end=new Date(now);end.setDate(now.getDate()-i*7);const st=new Date(end);st.setDate(end.getDate()-6);const t=DATA.filter(e=>{if(e.type!=='expense')return false;const d=new Date(e.date+'T12:00:00');return d>=st&&d<=end;}).reduce((s,e)=>s+e.amount,0);wk.push(t);lb.push(end.toLocaleDateString('es',{day:'numeric',month:'short'}));}
+  const yr=chartMonth.getFullYear(),mo=chartMonth.getMonth();
+  const firstDay=new Date(yr,mo,1);
+  const lastDay=new Date(yr,mo+1,0);
+  // Build 4-5 week buckets for the month
+  const wk=[],lb=[];
+  let weekStart=new Date(firstDay);
+  let weekNum=1;
+  while(weekStart<=lastDay){
+    const weekEnd=new Date(weekStart);
+    weekEnd.setDate(weekStart.getDate()+6);
+    if(weekEnd>lastDay) weekEnd.setTime(lastDay.getTime());
+    const t=DATA.filter(e=>{if(e.type!=='expense')return false;const d=new Date(e.date+'T12:00:00');return d>=weekStart&&d<=weekEnd;}).reduce((s,e)=>s+e.amount,0);
+    wk.push(t);
+    lb.push('Sem '+weekNum);
+    weekNum++;
+    weekStart.setDate(weekStart.getDate()+7);
+  }
   const mx=Math.max(...wk,0.01),pt=wk.map(v=>v===mx&&v>0?'#ffffff':NEON);
   const ctx=document.getElementById('weekly-chart').getContext('2d');
   if(weeklyChart) weeklyChart.destroy();
-  weeklyChart=new Chart(ctx,{type:'line',data:{labels:lb,datasets:[{data:wk,borderColor:NEON,backgroundColor:NEON_DIM,borderWidth:1.5,pointBackgroundColor:pt,pointBorderColor:'transparent',pointRadius:3,pointHoverRadius:5,tension:0.45,fill:true}]},options:{responsive:true,animation:{duration:700,easing:'easeOutQuart'},plugins:{legend:{display:false},tooltip:{...TT,callbacks:{title:i=>`Sem. al ${i[0].label}`,label:i=>` $${fmt(i.raw)}`}}},scales:{x:{grid:{display:false},ticks:{color:'#e8e8e8',font:{family:FM,size:13},maxRotation:30},border:{color:'rgba(255,255,255,0.05)'}},y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#e8e8e8',font:{family:FM,size:13},callback:v=>fmtShort(v)},border:{color:'rgba(255,255,255,0.05)'}}}}});
+  weeklyChart=new Chart(ctx,{type:'line',data:{labels:lb,datasets:[{data:wk,borderColor:NEON,backgroundColor:NEON_DIM,borderWidth:1.5,pointBackgroundColor:pt,pointBorderColor:'transparent',pointRadius:3,pointHoverRadius:5,tension:0.45,fill:true}]},options:{responsive:true,animation:{duration:700,easing:'easeOutQuart'},plugins:{legend:{display:false},tooltip:{...TT,callbacks:{title:i=>`${i[0].label} del mes`,label:i=>` $${fmt(i.raw)}`}}},scales:{x:{grid:{display:false},ticks:{color:'#e8e8e8',font:{family:FM,size:13}},border:{color:'rgba(255,255,255,0.05)'}},y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#e8e8e8',font:{family:FM,size:13},callback:v=>fmtShort(v)},border:{color:'rgba(255,255,255,0.05)'}}}}});
 }
 
 function renderKPI(exp,yr,mo){
-  const de=Math.max(new Date().getDate(),1),ts=exp.reduce((s,e)=>s+e.amount,0),da=ts/de;
+  const now=new Date();
+  const isCurrentMonth=(yr===now.getFullYear()&&mo===now.getMonth());
+  const de=isCurrentMonth?Math.max(now.getDate(),1):new Date(yr,mo+1,0).getDate();
+  const ts=exp.reduce((s,e)=>s+e.amount,0),da=ts/de;
   const pm=mo===0?11:mo-1,py=mo===0?yr-1:yr;
   const pe=getMonthExp(py,pm);const pd=new Date(py,pm+1,0).getDate();
   const pa=pe.reduce((s,e)=>s+e.amount,0)/pd;
@@ -901,6 +940,7 @@ function setType(t){
   document.getElementById('btn-expense').classList.toggle('active',t==='expense');
   document.getElementById('btn-income').classList.toggle('active',t==='income');
   document.getElementById('cat-group').style.display=t==='expense'?'':'none';
+  document.getElementById('inp-desc').placeholder=t==='expense'?'¿En qué gastaste?':'Describe el motivo del ingreso';
 }
 
 function buildCatPicker(){
@@ -988,6 +1028,60 @@ function buildCSVText(){
 }
 function shareWhatsApp(){if(!DATA.length){toast('Sin registros');return;}window.open(`https://wa.me/?text=${encodeURIComponent('📊 *Mis registros Spent*\n\n'+buildCSVText())}`,'_blank');}
 function shareEmail(){if(!DATA.length){toast('Sin registros');return;}window.open(`mailto:?subject=${encodeURIComponent('Registros Spent — '+new Date().toLocaleDateString('es'))}&body=${encodeURIComponent(buildCSVText())}`,'_blank');}
+
+
+/* ── CHART EXPAND ── */
+let fsChart=null;
+let fsResizeObs=null;
+
+function expandChart(canvasId, title){
+  const origCanvas=document.getElementById(canvasId);
+  const chartInst=Chart.getChart(origCanvas);
+  if(!chartInst) return;
+
+  const existing=document.getElementById('chart-fs-overlay');
+  if(existing) existing.remove();
+
+  const overlay=document.createElement('div');
+  overlay.id='chart-fs-overlay';
+  overlay.className='chart-fullscreen';
+
+  overlay.innerHTML=`
+    <button class="fs-close" onclick="closeExpandChart()">✕</button>
+    <div class="fs-title">${title}</div>
+    <div class="fs-canvas-wrap" id="fs-canvas-wrap"><canvas id="fs-canvas"></canvas></div>
+  `;
+  document.body.appendChild(overlay);
+
+  // Deep clone config safely
+  let cfg;
+  try{ cfg=JSON.parse(JSON.stringify(chartInst.config)); }catch(e){ return; }
+  if(!cfg.options) cfg.options={};
+  cfg.options.responsive=true;
+  cfg.options.maintainAspectRatio=false;
+  cfg.options.animation={duration:300};
+
+  const fsCanvas=document.getElementById('fs-canvas');
+  if(fsChart){ fsChart.destroy(); fsChart=null; }
+  fsChart=new Chart(fsCanvas.getContext('2d'), cfg);
+
+  // Auto-resize on orientation change or window resize
+  function handleFsResize(){
+    if(!fsChart) return;
+    setTimeout(()=>{ fsChart.resize(); },80);
+  }
+  window.addEventListener('resize', handleFsResize);
+  overlay._cleanupResize = ()=>window.removeEventListener('resize', handleFsResize);
+}
+
+function closeExpandChart(){
+  const overlay=document.getElementById('chart-fs-overlay');
+  if(overlay){
+    if(overlay._cleanupResize) overlay._cleanupResize();
+    overlay.remove();
+  }
+  if(fsChart){fsChart.destroy();fsChart=null;}
+}
 
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}
 </script>
